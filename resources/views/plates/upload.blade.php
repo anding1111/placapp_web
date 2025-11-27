@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="contenedor">
     <div align="center">
         <div class="uploadWrapper">
             <div class="avatar">
@@ -20,7 +19,6 @@
             </form>
         </div>
     </div>
-</div>
 @endsection
 
 @push('scripts')

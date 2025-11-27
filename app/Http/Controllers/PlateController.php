@@ -7,11 +7,11 @@ use App\Models\Plate;
 use App\Imports\PlatesImport;
 use App\Imports\DeletePlatesImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Yajra\DataTables\Facades\DataTables;
+use Carbon\Carbon;
 
 class PlateController extends Controller
 {
-    // ... otros métodos
-    
     /**
      * Muestra el formulario para cargar archivo Excel
      */
@@ -32,8 +32,16 @@ class PlateController extends Controller
         try {
             Excel::import(new PlatesImport, $request->file('excel'));
             
+            if ($request->ajax()) {
+                return response()->json(['success' => true]);
+            }
+            
             return back()->with('success', 'Archivo importado correctamente');
         } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'error' => $e->getMessage()]);
+            }
+            
             return back()->with('error', 'Error al importar: ' . $e->getMessage());
         }
     }
@@ -58,21 +66,87 @@ class PlateController extends Controller
         try {
             Excel::import(new DeletePlatesImport, $request->file('excel'));
             
+            if ($request->ajax()) {
+                return response()->json(['success' => true]);
+            }
+            
             return back()->with('success', 'Placas eliminadas correctamente');
         } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'error' => $e->getMessage()]);
+            }
+            
             return back()->with('error', 'Error al procesar: ' . $e->getMessage());
         }
     }
     
     /**
-     * Elimina una placa específica (null-plate.php)
+     * API para DataTables - Obtener placas
+     */
+    public function fetchDataTable(Request $request)
+    {
+        $plates = Plate::where('plate_enable', 1);
+        
+        return DataTables::of($plates)
+            ->addIndexColumn()
+            ->toJson();
+    }
+    
+    /**
+     * Obtener información de una placa específica para el modal
+     */
+    public function fetchPlate(Request $request)
+    {
+        $plateId = $request->input('plateId');
+        
+        $plate = Plate::where('id', $plateId)
+                     ->where('plate_enable', 1)
+                     ->first();
+                     
+        if (!$plate) {
+            return '<p>No se encontró la placa</p>';
+        }
+        
+        // Construir HTML para el modal
+        $html = '<div class="row" style="font-size:12px; margin-left:10px;">';
+        $html .= '<div class="col-sm-6 invoice-col">';
+        $html .= '<input type="hidden" id="numInvoice" value="'.$plateId.'">';
+        $html .= '</div>';
+        $html .= '</div>';
+        
+        $html .= '<div class="col-sm-12" style="margin-top: 15px;">';
+        $html .= '<table class="table table-hover" border="0" width="100%">';
+        $html .= '<thead>';
+        $html .= '<tr>';
+        $html .= '<th style="width:20%">Placa</th>';
+        $html .= '<th style="width:35%; text-align:right">Entrada</th>';
+        $html .= '<th style="width:20%; text-align:right">Ubicación</th>';
+        $html .= '<th style="width:25%; text-align:right">Detalles</th>';
+        $html .= '</tr>';
+        $html .= '</thead>';
+        $html .= '<tbody style="max-height: 30vh; overflow-y: auto; overflow-x: hidden;">';
+        
+        $html .= '<tr>';
+        $html .= '<td style="width:20%">'.$plate->plate_name.'</td>';
+        $html .= '<td style="text-align:right; width:35%">'.$plate->plate_entry_date.'</td>';
+        $html .= '<td style="text-align:right; width:20%">'.$plate->plate_location.'</td>';
+        $html .= '<td style="text-align:right; width:25%">'.$plate->plate_detail.'</td>';
+        $html .= '</tr>';
+        
+        $html .= '</tbody></table></div>';
+        
+        return $html;
+    }
+    
+    /**
+     * Elimina una placa específica 
      */
     public function nullPlate(Request $request)
     {
         $plateId = $request->input('invId');
         
         if ($plateId) {
-            Plate::where('plate_id', $plateId)
+            Plate::where('id', $plateId)
                  ->where('plate_enable', 1)
                  ->update(['plate_enable' => 0]);
                  
@@ -83,9 +157,9 @@ class PlateController extends Controller
     }
     
     /**
-     * Buscar placas (list_of_plate.php)
+     * Buscar placas 
      */
-    public function search(Request $request)
+    public function searchPlates(Request $request)
     {
         $keyword = $request->input('keyword');
         $user = auth()->user();

@@ -33,59 +33,59 @@ class AuthController extends Controller
 
             // Comenta estas líneas para deshabilitar la validación de UUID
 
-            // $uuid_check = Uuid::where('user_id', $user->id)
-            //                 ->where('uuid', $uuid)
-            //                 ->where('status', 1)
-            //                 ->first();
+            $uuid_check = Uuid::where('user_id', $user->id)
+                            ->where('uuid', $uuid)
+                            ->where('status', 1)
+                            ->first();
 
-            // if ($uuid_check) {
-            //     // Dispositivo autorizado
-            //     $user->online_status = 1;
-            //     $user->last_connection = now();
-            //     $user->save();
+            if ($uuid_check) {
+                // Dispositivo autorizado
+                $user->online_status = 1;
+                $user->last_connection = now();
+                $user->save();
                 
-            //     $request->session()->regenerate();
+                $request->session()->regenerate();
                 
-            //     if ($request->wantsJson()) {
-            //         return response()->json(['success' => true, 'redirect' => $this->redirectTo]);
-            //     }
+                if ($request->wantsJson()) {
+                    return response()->json(['success' => true, 'redirect' => $this->redirectTo]);
+                }
                 
-            //     return redirect()->intended($this->redirectTo);
-            // } else {
-            //     // Dispositivo no autorizado
-            //     Auth::logout();
+                return redirect()->intended($this->redirectTo);
+            } else {
+                // Dispositivo no autorizado
+                Auth::logout();
                 
-            //     // Guardar el UUID en sesión para el formulario de autorización
-            //     $request->session()->put('pending_uuid', $uuid);
-            //     $request->session()->put('pending_user_id', $user->id);
+                // Guardar el UUID en sesión para el formulario de autorización
+                $request->session()->put('pending_uuid', $uuid);
+                $request->session()->put('pending_user_id', $user->id);
                 
-            //     if ($request->wantsJson()) {
-            //         return response()->json([
-            //             'error' => 'Dispositivo no autorizado', 
-            //             'uuid' => $uuid,
-            //             'unauthorized' => true
-            //         ], 403);
-            //     }
+                if ($request->wantsJson()) {
+                    return response()->json([
+                        'error' => 'Dispositivo no autorizado', 
+                        'uuid' => $uuid,
+                        'unauthorized' => true
+                    ], 403);
+                }
 
-            //     return redirect()->back()
-            //         ->withInput($request->only('username'))
-            //         ->withErrors(['error' => 'Dispositivo no autorizado']);
-            // }
+                return redirect()->back()
+                    ->withInput($request->only('username'))
+                    ->withErrors(['error' => 'Dispositivo no autorizado']);
+            }
             // Si deseas autorizar automáticamente a todos los dispositivos, descomenta las siguientes líneas
             // y comenta la validación de UUID anterior.
 
             // Añade este código en su lugar para autorizar automáticamente a todos
-            $user->online_status = 1;
-            $user->last_connection = now();
-            $user->save();
+            // $user->online_status = 1;
+            // $user->last_connection = now();
+            // $user->save();
             
-            $request->session()->regenerate();
+            // $request->session()->regenerate();
             
-            if ($request->wantsJson()) {
-                return response()->json(['success' => true, 'redirect' => $this->redirectTo]);
-            }
+            // if ($request->wantsJson()) {
+            //     return response()->json(['success' => true, 'redirect' => $this->redirectTo]);
+            // }
             
-            return redirect()->intended($this->redirectTo);
+            // return redirect()->intended($this->redirectTo);
 
         }
 

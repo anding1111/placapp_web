@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use App\Models\User;
 
 class UserSeeder extends Seeder
@@ -14,7 +16,7 @@ class UserSeeder extends Seeder
             'name' => 'Admin User',
             'username' => 'admin', // 🔹 Agrega un valor para 'username'
             'email' => 'admin@placapp.com',
-            'password' => md5('password'),
+            'password' => Hash::make('password'),
         ]);
 
         // Crear más usuarios de prueba con Factory (opcional)

@@ -20,10 +20,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
     
     <!-- Bootstrap 4 -->
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     
     <!-- DataTables CSS -->
-    <link href="https://cdn.datatables.net/v/bs4/dt-1.13.6/datatables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css">
     
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" rel="stylesheet">
@@ -48,7 +48,7 @@
                 Inicio
             </div>
         </div>
-        @if(Auth::user() && Auth::user()->role == 1)
+        @if(Auth::user() && Auth::user()->role <= 1)
             <div class="mobile-bottom-nav__item @if(Route::is('upload.form')) mobile-bottom-nav__item--active @endif">
                 <div class="mobile-bottom-nav__item-content url_button">
                     <i class="material-icons">upload_file</i>
@@ -78,10 +78,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     
     <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/v/bs4/dt-1.13.6/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
     
-    <!-- Script JS -->
+    <!-- Script JS personalizado -->
     <script src="{{ asset('js/script.js') }}"></script>
+    
+    <!-- Inicialización de DataTables -->
+    @include('layouts.partials.datatables-init')
     
     <script>
         $(document).ready(function() {
@@ -116,20 +120,37 @@
     </script>
     
     @stack('scripts')
+    
+    <!-- OnlineTracker (si el usuario está autenticado) -->
+    @auth
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tracker = new OnlineTracker({
+                interval: 3000, // 3 segundos
+                endpoint: '{{ route("online.update") }}',
+                csrfToken: "{{ csrf_token() }}"
+            });
+            tracker.start();
+        });
+    </script>
+    @endauth
+    
+    <!-- Rutas globales para JavaScript -->
+    <script>
+        var laravelRoutes = {
+            home: "{{ route('home') }}",
+            upload: "{{ route('upload.form') }}",
+            delete: "{{ route('delete.form') }}",
+            users: "{{ route('users.index') }}",
+            logout: "{{ route('logout') }}",
+            onlineUsers: "{{ route('online.users') }}",
+            uploadExcel: "{{ route('upload.excel') }}",
+            deleteExcel: "{{ route('delete.excel') }}",
+            online: "{{ route('online.update') }}"
+        };
+        
+        var csrfToken = "{{ csrf_token() }}";
+    </script>
 </body>
 
 </html>
-
-
-<script>
-// OnlineTracker solo se carga si el usuario está autenticado
-@auth
-document.addEventListener('DOMContentLoaded', function() {
-    const tracker = new OnlineTracker({
-        interval: 30000, // 30 segundos
-        endpoint: '{{ route("online.update") }}'
-    });
-    tracker.start();
-});
-@endauth
-</script>
