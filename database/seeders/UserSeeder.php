@@ -17,6 +17,7 @@ class UserSeeder extends Seeder
             'username' => 'admin', // 🔹 Agrega un valor para 'username'
             'email' => 'admin@placapp.com',
             'password' => Hash::make('password'),
+            'role' => 1,
         ]);
 
         // Crear más usuarios de prueba con Factory (opcional)

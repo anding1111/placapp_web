@@ -29,6 +29,21 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" rel="stylesheet">
     
     @stack('styles')
+    <!-- Mobile-only DataTables tweaks: hide length selector, keep search visible -->
+    <style>
+        @media (max-width: 480px) {
+            /* Oculta el control 'mostrar X registros' generado por DataTables */
+            .dataTables_length { display: none !important; }
+
+            /* Mantener el filtro (search) visible y ocupando el ancho */
+            .dataTables_filter { display: block !important; width: 100% !important; margin-top: 8px; }
+            .dataTables_filter label { width: 100%; display: flex; justify-content: flex-start; }
+            .dataTables_filter input { width: 100% !important; max-width: 100% !important; }
+
+            /* Ajustes adicionales para que la tabla sea usable en móvil */
+            .dataTables_paginate { display: flex; justify-content: center; margin-top: 8px; }
+        }
+    </style>
 </head>
 
 <body>

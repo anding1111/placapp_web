@@ -45,7 +45,7 @@
 </div>
 
 <!-- Vista de tabla de placas -->
-<div class="form-wrapper-table col-lg-8 col-md-10 col-sm-12 col-xs-12 contTable mt-3">
+<div class="form-wrapper-table col-lg-8 col-md-10 col-sm-12 col-xs-12 contTable mt-3" id="plateTableContainer">
     <div class="panel panel-default w3-card-4">
         <div class="row justify-content-center mb--10">
             PLACAS
@@ -122,6 +122,35 @@
         $(".contFile").fadeOut("slow");
         $(".contTable").fadeIn("slow");
     }
+
+    // Ajusta dinámicamente la altura del contenedor de la tabla en móviles
+    // para que se adapte al espacio disponible sin solaparse con la bottom bar
+    function adjustTableContainerHeight() {
+        const container = document.getElementById('plateTableContainer');
+        if (!container) return;
+
+        // Solo aplica en pantallas pequeñas (≤768px)
+        if (window.innerWidth <= 768) {
+            const bottomBar = document.querySelector('body > div:last-child');
+            const bottomBarHeight = bottomBar ? bottomBar.offsetHeight : 80;
+            const viewportHeight = window.innerHeight;
+            const containerTop = container.getBoundingClientRect().top + window.scrollY;
+            
+            // Altura disponible: viewport - posición del contenedor - altura de bottom bar
+            const availableHeight = viewportHeight - containerTop - bottomBarHeight - 20; // 20px de margen
+            container.style.maxHeight = Math.max(200, availableHeight) + 'px';
+            container.style.overflowY = 'auto';
+        } else {
+            // En pantallas grandes, remover restricción de altura
+            container.style.maxHeight = 'none';
+            container.style.overflowY = 'visible';
+        }
+    }
+
+    // Ejecutar al cargar la página y cuando se redimensiona la ventana
+    document.addEventListener('DOMContentLoaded', adjustTableContainerHeight);
+    window.addEventListener('resize', adjustTableContainerHeight);
+    window.addEventListener('orientationchange', adjustTableContainerHeight);
 
     // Carga script_dataTable.js después de definir las variables
 </script>

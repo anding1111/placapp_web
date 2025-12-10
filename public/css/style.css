@@ -235,6 +235,7 @@ h3 {
 .boton_day {
   background-color: #FC2947;
 }
+
 /* Último día */
 .boton_day span {
   background-color: #FC2947;
@@ -244,6 +245,7 @@ h3 {
 .boton_week {
   background-color: #70E000;
 }
+
 /* Última Semana */
 .boton_week span {
   background-color: #70E000;
@@ -253,6 +255,7 @@ h3 {
 .boton_month {
   background-color: #FF96C5;
 }
+
 /* Último mes */
 .boton_month span {
   background-color: #FF96C5;
@@ -263,6 +266,7 @@ h3 {
   /* background-color: #a07164; */
   background-color: #50C4ED;
 }
+
 /* Últimos 3 meses */
 .boton_under_three_month span {
   /* background-color: #a07164; */
@@ -274,6 +278,7 @@ h3 {
   /* background-color: #a07164; */
   background-color: #F4E931;
 }
+
 /* Últimos 6 meses */
 .boton_under_six_month span {
   /* background-color: #a07164; */
@@ -286,13 +291,15 @@ h3 {
   /* text-shadow: 1px 1px 1px #000000 !important; */
   color: #ffffff !important;
 }
+
 /* Más de 6 meses */
 .boton_over_six_month:active,
 .boton_over_six_month:hover {
   /* background-color: #1d1e2c; */
   /* text-shadow: 1px 1px 1px #000000 !important; */
-  color:#000000 !important;
+  color: #000000 !important;
 }
+
 /* Más de 6 meses */
 .boton_over_six_month span {
   background-color: #1d1e2c;
@@ -300,7 +307,7 @@ h3 {
 }
 
 .boton_over_six_month:active span,
-.boton_over_six_month:hover span{
+.boton_over_six_month:hover span {
   text-shadow: 1px 1px 1px #ffffff !important;
 }
 
@@ -415,6 +422,20 @@ h3 {
 }
 
 /*//////////////////////// Bottom Navigation Bar ////////////////////////*/
+
+@media (max-width: 768px) {
+  .mobile-bottom-nav {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 95% !important;
+    right: auto !important;
+    bottom: 10px !important;
+    border-radius: 20px !important;
+    margin: 0 !important;
+    padding: 10px 0 10px 0 !important;
+    justify-content: space-around;
+  }
+}
 
 .mobile-bottom-nav {
   position: fixed;
@@ -537,6 +558,7 @@ label.colors[for=yellow] {
 label.colors[for=green] {
   --c-bg: var(--green);
 }
+
 label.colors[for=pink] {
   --c-bg: var(--pink);
 }
@@ -1194,193 +1216,446 @@ button {
 
 /* Style to card with aditional info plate */
 .me {
-	background-image: url(../img/odometer.svg);
-	background-size: cover;
+  background-image: url(../img/odometer.svg);
+  background-size: cover;
 }
+
 /* .container {
 	align-items: center;
 	display: flex;
 	justify-content: center;
 } */
 .email {
-	/* background: #DEDBDF;
+  /* background: #DEDBDF;
 	border-radius: 16px; */
-	height: 32px;
-	overflow: hidden;
-	position: relative;
-	width: 84px;
-	-webkit-tap-highlight-color: transparent;
-	transition: width 300ms cubic-bezier(0.4, 0.0, 0.2, 1),
-		height 300ms cubic-bezier(0.4, 0.0, 0.2, 1),
-		box-shadow 300ms cubic-bezier(0.4, 0.0, 0.2, 1),
-		border-radius 300ms cubic-bezier(0.4, 0.0, 0.2, 1);
+  height: 32px;
+  overflow: hidden;
+  position: relative;
+  width: 84px;
+  -webkit-tap-highlight-color: transparent;
+  transition: width 300ms cubic-bezier(0.4, 0.0, 0.2, 1),
+    height 300ms cubic-bezier(0.4, 0.0, 0.2, 1),
+    box-shadow 300ms cubic-bezier(0.4, 0.0, 0.2, 1),
+    border-radius 300ms cubic-bezier(0.4, 0.0, 0.2, 1);
   margin: 2px;
   font-weight: 900;
   border-radius: 8px;
   color: #000000;
 }
+
 .email:not(.expand) {
-	cursor: pointer;
+  cursor: pointer;
   border: solid 2px #000000;
 }
+
 .email:not(.expand):hover {
-	background: #C2C0C2;
+  background: #C2C0C2;
 }
+
 .from {
-	position: absolute;
-	transition: opacity 200ms 100ms cubic-bezier(0.0, 0.0, 0.2, 1);
+  position: absolute;
+  transition: opacity 200ms 100ms cubic-bezier(0.0, 0.0, 0.2, 1);
 }
+
 .from-contents {
-	display: flex;
-	flex-direction: row;
-	transform-origin: 0 0;
-	transition: transform 300ms cubic-bezier(0.4, 0.0, 0.2, 1);
+  display: flex;
+  flex-direction: row;
+  transform-origin: 0 0;
+  transition: transform 300ms cubic-bezier(0.4, 0.0, 0.2, 1);
 }
+
 .to {
-	opacity: 0;
-	position: absolute;
-	transition: opacity 100ms cubic-bezier(0.4, 0.0, 1, 1);
+  opacity: 0;
+  position: absolute;
+  transition: opacity 100ms cubic-bezier(0.4, 0.0, 1, 1);
 }
+
 .to-contents {
-	transform: scale(.55);
-	transform-origin: 0 0;
-	transition: transform 300ms cubic-bezier(0.4, 0.0, 0.2, 1);
+  transform: scale(.55);
+  transform-origin: 0 0;
+  transition: transform 300ms cubic-bezier(0.4, 0.0, 0.2, 1);
 }
+
 .avatar-small {
-	border-radius: 12px;
-	height: 24px;
-	left: 6px;
-	position: relative;
-	top: 4px;
-	width: 24px;
+  border-radius: 12px;
+  height: 24px;
+  left: 6px;
+  position: relative;
+  top: 4px;
+  width: 24px;
 }
+
 .name {
-	font-size: 18px;
-	line-height: 32px;
+  font-size: 18px;
+  line-height: 32px;
   font-family: Phantomsans, sans-serif;
-	margin-left: 4px !important;
+  margin-left: 4px !important;
 }
+
 .prevent-select {
-  -webkit-user-select: none; /* Safari */
-  -ms-user-select: none; /* IE 10 and IE 11 */
-  user-select: none; /* Standard syntax */
+  -webkit-user-select: none;
+  /* Safari */
+  -ms-user-select: none;
+  /* IE 10 and IE 11 */
+  user-select: none;
+  /* Standard syntax */
 }
+
 .top {
-	background: #6422EB;
-	display: flex;
-	flex-direction: row;
-	height: 70px;
-	transition: height 300ms cubic-bezier(0.4, 0.0, 0.2, 1);
-	width: 200px;
+  background: #6422EB;
+  display: flex;
+  flex-direction: row;
+  height: 70px;
+  transition: height 300ms cubic-bezier(0.4, 0.0, 0.2, 1);
+  width: 200px;
 }
+
 .avatar-large {
-	border-radius: 21px;
-	height: 42px;
-	margin-left: 12px;
-	position: relative;
-	top: 14px;
-	width: 42px;
+  border-radius: 21px;
+  height: 42px;
+  margin-left: 12px;
+  position: relative;
+  top: 14px;
+  width: 42px;
 }
+
 .name-large {
-	color: #efd8ef;
-	font-size: 16px;
-	line-height: 70px;
-	margin-left: 20px;
+  color: #efd8ef;
+  font-size: 16px;
+  line-height: 70px;
+  margin-left: 20px;
 }
+
 .x-touch {
-	align-items: center;
-	align-self: center;
-	cursor: pointer;
-	display: flex;
-	height: 50px;
-	justify-content: center;
-	margin-left: auto;
-	width: 50px;
+  align-items: center;
+  align-self: center;
+  cursor: pointer;
+  display: flex;
+  height: 50px;
+  justify-content: center;
+  margin-left: auto;
+  width: 50px;
 }
+
 .x {
-	background: #BA87F9;
-	border-radius: 10px;
-	height: 20px;
-	position: relative;
-	width: 20px;
+  background: #BA87F9;
+  border-radius: 10px;
+  height: 20px;
+  position: relative;
+  width: 20px;
 }
+
 .x-touch:hover .x {
-	background: #CB9AFB;
+  background: #CB9AFB;
 }
+
 .line1 {
-	background: #6422EB;
-	height: 12px;
-	position: absolute;
-	transform: translateX(9px) translateY(4px) rotate(45deg);
-	width: 2px;
+  background: #6422EB;
+  height: 12px;
+  position: absolute;
+  transform: translateX(9px) translateY(4px) rotate(45deg);
+  width: 2px;
 }
+
 .line2 {
-	background: #6422EB;
-	height: 12px;
-	position: absolute;
-	transform: translateX(9px) translateY(4px) rotate(-45deg);
-	width: 2px;
+  background: #6422EB;
+  height: 12px;
+  position: absolute;
+  transform: translateX(9px) translateY(4px) rotate(-45deg);
+  width: 2px;
 }
+
 .bottom {
-	background: #FFF;
-	color: #444247;
-	font-size: 14px;
-	height: 200px;
-	padding-top: 5px;
-	width: 200px;
+  background: #FFF;
+  color: #444247;
+  font-size: 14px;
+  height: 200px;
+  padding-top: 5px;
+  width: 200px;
   font-size: 14px;
   font-weight: 400;
 }
+
 .row-card {
-	align-items: center;
-	display: flex;
-	flex-direction: row;
-	height: 60px;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  height: 60px;
 }
+
 .twitter {
-	margin-left: 16px;
-	height: 30px;
-	position: relative;
-	top: 0px;
-	width: 30px;
+  margin-left: 16px;
+  height: 30px;
+  position: relative;
+  top: 0px;
+  width: 30px;
 }
+
 .medium {
-	margin-left: 16px;
-	height: 30px;
-	position: relative;
-	width: 30px;
+  margin-left: 16px;
+  height: 30px;
+  position: relative;
+  width: 30px;
 }
+
 .link {
-	margin-left: 16px;
+  margin-left: 16px;
   text-align: left;
 }
+
 .link a {
-	color: #444247;
-	text-decoration: none;
+  color: #444247;
+  text-decoration: none;
 }
+
 .link a:hover {
-	color: #777579;
+  color: #777579;
 }
+
 .email.expand {
-	border-radius: 6px;
-	box-shadow: 0 10px 20px rgba(0,0,0,0.10), 0 6px 6px rgba(0,0,0,0.16);
-	height: 200px;
-	width: 200px;
+  border-radius: 6px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.10), 0 6px 6px rgba(0, 0, 0, 0.16);
+  height: 200px;
+  width: 200px;
 }
+
 .expand .from {
-	opacity: 0;
-	transition: opacity 100ms cubic-bezier(0.4, 0.0, 1, 1);
+  opacity: 0;
+  transition: opacity 100ms cubic-bezier(0.4, 0.0, 1, 1);
 }
+
 .expand .from-contents {
-	transform: scale(1.91);
+  transform: scale(1.91);
 }
+
 .expand .to {
-	opacity: 1;
-	transition: opacity 200ms 100ms cubic-bezier(0.0, 0.0, 0.2, 1);
+  opacity: 1;
+  transition: opacity 200ms 100ms cubic-bezier(0.0, 0.0, 0.2, 1);
 }
+
 .expand .to-contents {
-	transform: scale(1);
+  transform: scale(1);
 }
+
 /* *, ::after, ::before {
   box-sizing: content-box !important;
 } */
+
+/* ==================================================
+   Mobile / Tablet override: force page containers to
+   match viewport width and prevent horizontal overflow
+   ================================================== */
+@media (max-width: 992px) {
+  .form-wrapper-table {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Ensure DataTables container scrolls horizontally rather than expanding viewport */
+  .dataTable_wrapper,
+  .dataTables_scrollBody {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  table.dataTable {
+    width: 100% !important;
+    table-layout: auto !important;
+  }
+
+  /* Avoid large left/right margins that can cause horizontal scroll */
+  body,
+  html {
+    overflow-x: hidden;
+  }
+}
+
+/* Small screens: dynamic height management for table containers */
+@media (max-width: 768px) {
+
+  /* Main table container adapts dynamically via JavaScript */
+  .form-wrapper-table {
+    position: relative !important;
+    min-height: 600px !important;
+    /* Height and overflow-y set by JavaScript adjustTableContainerHeight() */
+  }
+
+  /* Ensure DataTables scrolls internally when constrained */
+  .form-wrapper-table .panel-body {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* DataTables wrapper scrolls horizontally */
+  .dataTable_wrapper {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Reduce font size for table text in mobile */
+  table.dataTable tbody td {
+    font-size: 0.85rem !important;
+    padding: 3px 6px !important;
+    height: auto !important;
+  }
+
+  table.dataTable tbody tr {
+    height: auto !important;
+  }
+
+  table.dataTable thead th {
+    font-size: 0.9rem !important;
+    padding: 4px 6px !important;
+  }
+
+  table.dataTable {
+    width: 100% !important;
+    table-layout: auto !important;
+  }
+
+  /* Compact table BODY with vertical scroll */
+  table.dataTable tbody {
+    display: block;
+    max-height: 260px;
+    overflow-y: auto;
+  }
+
+  table.dataTable thead {
+    display: block;
+  }
+
+  /* Ensure tbody columns align with thead */
+  table.dataTable tr {
+    display: flex;
+  }
+
+  table.dataTable td,
+  table.dataTable th {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* Simplify and style pagination buttons with icons */
+  .dataTables_wrapper .dataTables_paginate {
+    text-align: center;
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .paginate_button {
+    padding: 6px 6px !important;
+    margin: 0 1px !important;
+    font-size: 0.75rem !important;
+    border: 1px solid #ddd !important;
+    border-radius: 4px !important;
+    background-color: #f5f5f5 !important;
+    color: #333 !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s !important;
+    min-width: 32px !important;
+    height: 32px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .paginate_button i {
+    font-size: 0.75rem !important;
+  }
+
+  .paginate_button:hover:not(.disabled) {
+    background-color: #ddd !important;
+  }
+
+  .paginate_button.active {
+    background-color: #33B5E5 !important;
+    color: white !important;
+    border-color: #33B5E5 !important;
+  }
+
+  .paginate_button.disabled {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+  }
+
+  /* Style pagination info text */
+  .dataTables_wrapper .dataTables_info {
+    font-size: 0.85rem !important;
+    margin-bottom: 8px !important;
+    padding: 4px 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Hide length menu entirely */
+  .dataTables_wrapper .dataTables_length {
+    display: none !important;
+  }
+
+  /* Style search/filter input */
+  .dataTables_wrapper .dataTables_filter {
+    margin-bottom: 8px !important;
+    text-align: center;
+  }
+
+  .dataTables_wrapper .dataTables_filter label {
+    font-size: 0.9rem !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .dataTables_wrapper .dataTables_filter input {
+    width: 100% !important;
+    max-width: 250px !important;
+    font-size: 0.85rem !important;
+    padding: 6px 8px !important;
+    border: 1px solid #ddd !important;
+    border-radius: 4px !important;
+  }
+}
+
+/* Compact icon-only buttons used in tables (edit/delete) */
+.btn-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 36px !important;
+  height: 36px !important;
+  padding: 4px !important;
+  border-radius: 6px !important;
+  font-size: 0.9rem !important;
+}
+
+.btn-icon .fa {
+  font-size: 14px !important;
+}
+
+/* Small adjustments to ensure visual contrast for btn-light when used as icon */
+.btn-light.btn-icon {
+  background-color: #ffffff !important;
+  border: 1px solid #e6e6e6 !important;
+  color: #333 !important;
+}
+
+.btn-secondary.btn-icon {
+  background-color: #6c757d !important;
+  color: #fff !important;
+  border: 1px solid #6c757d !important;
+}

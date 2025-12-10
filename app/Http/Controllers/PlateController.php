@@ -89,6 +89,12 @@ class PlateController extends Controller
         
         return DataTables::of($plates)
             ->addIndexColumn()
+            ->editColumn('plate_entry_date', function ($plate) {
+                // Formatear fecha: 2024-12-13 18:16:35
+                return $plate->plate_entry_date ? 
+                    Carbon::parse($plate->plate_entry_date)->format('Y-m-d H:i:s') : 
+                    '';
+            })
             ->toJson();
     }
     

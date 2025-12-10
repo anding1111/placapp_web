@@ -5,20 +5,21 @@
         processing: true,
         serverSide: true,
         scrollCollapse: true,
-        pagingType: 'simple_numbers',
+        pagingType: 'full_numbers',
+        dom: 'frtip',  // 'f' = search, 'r' = processing, 't' = table, 'i' = info, 'p' = pagination
         language: {
             "processing": "Procesando...",
             "lengthMenu": "Mostrar _MENU_ registros",
             "zeroRecords": "No se encontraron resultados",
-            "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "info": "_START_ a _END_ de _TOTAL_",
             "infoEmpty": "Mostrando 0 registros",
             "infoFiltered": "(filtrado de _MAX_ registros totales)",
             "search": "Buscar:",
             "paginate": {
-                "first": "Primero",
-                "last": "Último",
-                "next": "Siguiente",
-                "previous": "Anterior"
+                "first": "<i class='fa fa-step-backward'></i>",
+                "last": "<i class='fa fa-step-forward'></i>",
+                "next": "<i class='fa fa-chevron-right'></i>",
+                "previous": "<i class='fa fa-chevron-left'></i>"
             }
         }
     });
@@ -30,3 +31,4 @@
         }
     });
 </script>
+

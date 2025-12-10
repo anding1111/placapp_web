@@ -156,8 +156,9 @@ class UserController extends Controller
                 
                 // Solo mostrar botón de editar si tiene permisos
                 if ($this->canManageUser($authUser, $user)) {
-                    $actions .= '<a href="' . route('users.edit', $user->id) . '" class="btn btn-secondary btn-small">Editar</a>';
-                    $actions .= '<a href="#null_modal_user" class="invoiceInfoUser btn btn-light btn-small" id="invId" data-toggle="modal" data-id="' . $user->id . '">Borrar</a>';
+                    // Icon-only buttons for compact layout (accessible with title/aria-label)
+                    $actions .= '<a href="' . route('users.edit', $user->id) . '" class="btn btn-icon btn-secondary" title="Editar usuario" aria-label="Editar usuario"><i class="fa fa-edit" aria-hidden="true"></i></a>';
+                    $actions .= '<a href="#null_modal_user" class="invoiceInfoUser btn btn-icon btn-light" id="invId" data-toggle="modal" data-id="' . $user->id . '" title="Borrar usuario" aria-label="Borrar usuario"><i class="fa fa-trash" aria-hidden="true"></i></a>';
                 }
                 
                 return $actions;
