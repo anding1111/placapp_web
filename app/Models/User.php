@@ -92,4 +92,12 @@ class User extends Authenticatable
     {
         return $this->level <= $targetUser->level;
     }
+    
+    /**
+     * Determina si el usuario es un usuario demo
+     */
+    public function isDemoUser()
+    {
+        return $this->level == 4;
+    }
 }

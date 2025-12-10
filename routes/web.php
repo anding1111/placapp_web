@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PlateController;
@@ -12,6 +13,10 @@ use App\Http\Controllers\OnlineUserController;
 Route::middleware(['guest', 'web'])->group(function () {
     Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/', [AuthController::class, 'login'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+    // Rutas de registro público
+    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/register', [RegisterController::class, 'register']);
 
     // Rutas de autorización de dispositivos
     Route::get('/device-auth', [AuthController::class, 'showDeviceAuth'])->name('device.auth');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Plate;
+use App\Models\PlateDemo;
 use App\Imports\PlatesImport;
 use App\Imports\DeletePlatesImport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -85,7 +86,14 @@ class PlateController extends Controller
      */
     public function fetchDataTable(Request $request)
     {
-        $plates = Plate::where('plate_enable', 1);
+        $user = auth()->user();
+        
+        // Usar PlateDemo para usuarios demo (level 4), Plate para usuarios regulares
+        if ($user->isDemoUser()) {
+            $plates = PlateDemo::where('plate_enable', 1);
+        } else {
+            $plates = Plate::where('plate_enable', 1);
+        }
         
         return DataTables::of($plates)
             ->addIndexColumn()
@@ -104,10 +112,18 @@ class PlateController extends Controller
     public function fetchPlate(Request $request)
     {
         $plateId = $request->input('plateId');
+        $user = auth()->user();
         
-        $plate = Plate::where('id', $plateId)
-                     ->where('plate_enable', 1)
-                     ->first();
+        // Consultar la tabla correcta según el tipo de usuario
+        if ($user->isDemoUser()) {
+            $plate = PlateDemo::where('id', $plateId)
+                         ->where('plate_enable', 1)
+                         ->first();
+        } else {
+            $plate = Plate::where('id', $plateId)
+                         ->where('plate_enable', 1)
+                         ->first();
+        }
                      
         if (!$plate) {
             return '<p>No se encontró la placa</p>';
@@ -150,11 +166,19 @@ class PlateController extends Controller
     public function nullPlate(Request $request)
     {
         $plateId = $request->input('invId');
+        $user = auth()->user();
         
         if ($plateId) {
-            Plate::where('id', $plateId)
-                 ->where('plate_enable', 1)
-                 ->update(['plate_enable' => 0]);
+            // Actualizar en la tabla correcta según el tipo de usuario
+            if ($user->isDemoUser()) {
+                PlateDemo::where('id', $plateId)
+                     ->where('plate_enable', 1)
+                     ->update(['plate_enable' => 0]);
+            } else {
+                Plate::where('id', $plateId)
+                     ->where('plate_enable', 1)
+                     ->update(['plate_enable' => 0]);
+            }
                  
             return response()->json(['success' => true]);
         }
@@ -174,11 +198,20 @@ class PlateController extends Controller
             return '';
         }
         
-        $plates = Plate::where('plate_enable', 1)
-                      ->where('plate_level', '>=', $user->level)
-                      ->where('plate_name', 'like', $keyword . '%')
-                      ->orderBy('plate_name')
-                      ->get();
+        // Buscar en la tabla correcta según el tipo de usuario
+        if ($user->isDemoUser()) {
+            $plates = PlateDemo::where('plate_enable', 1)
+                          ->where('plate_level', '>=', $user->level)
+                          ->where('plate_name', 'like', $keyword . '%')
+                          ->orderBy('plate_name')
+                          ->get();
+        } else {
+            $plates = Plate::where('plate_enable', 1)
+                          ->where('plate_level', '>=', $user->level)
+                          ->where('plate_name', 'like', $keyword . '%')
+                          ->orderBy('plate_name')
+                          ->get();
+        }
                       
         return view('plates.search_results', compact('plates', 'user'));
     }

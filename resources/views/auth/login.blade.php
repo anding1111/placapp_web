@@ -304,6 +304,7 @@
                     </div>
                 @endif
                 <p><a href="#">¿Has olvidado tu contraseña?</a></p>
+                <p><a href="{{ route('register') }}">Crear Cuenta</a></p>
             </div>
         </div>
     </div>
