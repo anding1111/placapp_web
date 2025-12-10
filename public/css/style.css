@@ -415,6 +415,7 @@ h3 {
     0 4px 20px 0 rgba(0, 0, 0, 0.19);
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
+  border-radius: 8px;
   padding: 8px;
   display: flex;
   width: 100%;
@@ -425,14 +426,9 @@ h3 {
 
 @media (max-width: 768px) {
   .mobile-bottom-nav {
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    width: 95% !important;
-    right: auto !important;
     bottom: 10px !important;
     border-radius: 20px !important;
     margin: 0 !important;
-    padding: 10px 0 10px 0 !important;
     justify-content: space-around;
   }
 }
@@ -1658,4 +1654,200 @@ button {
   background-color: #6c757d !important;
   color: #fff !important;
   border: 1px solid #6c757d !important;
+}
+
+/* Modern Glassmorphism Modal Redesign - Compact */
+
+.modern-modal-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 420px;
+  /* Slightly narrower */
+  background: rgba(255, 255, 255, 0.85);
+  /* Slightly more opaque for better contrast */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 0 20px rgba(255, 255, 255, 0.5);
+  border-radius: 16px;
+  padding: 20px 25px;
+  /* Reduced padding */
+  max-height: 85vh;
+  overflow-y: auto;
+  z-index: 999;
+  color: #333;
+  margin-top: 10px;
+}
+
+.modern-modal-header h3 {
+  margin: 0 0 15px 0;
+  /* Reduced margin */
+  text-align: center;
+  color: #2c3e50;
+  font-weight: 700;
+  font-size: 1.3rem;
+  /* Slightly smaller */
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-family: 'Poppins', sans-serif;
+  text-shadow: none;
+}
+
+.modern-modal-body {
+  width: 100%;
+}
+
+.modern-form-group {
+  margin-bottom: 12px;
+  /* Significantly reduced from 20px */
+  position: relative;
+}
+
+.modern-form-group label {
+  display: block;
+  margin-bottom: 4px;
+  /* Reduced from 8px */
+  font-weight: 600;
+  color: #444;
+  font-size: 0.85rem;
+}
+
+.modern-input,
+.modern-select {
+  width: 100%;
+  padding: 8px 40px 8px 12px;
+  /* Reduced padding */
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #e0e0e0;
+  /* Subtle border for definition */
+  border-radius: 8px;
+  /* Slightly smaller radius */
+  font-size: 0.9rem;
+  /* Compact font size */
+  color: #333;
+  box-shadow: none;
+  transition: all 0.2s ease;
+  height: 38px;
+  /* Fixed compact height */
+}
+
+.modern-input:focus,
+.modern-select:focus {
+  outline: none;
+  background: #fff;
+  border-color: #00b6df;
+  box-shadow: 0 0 0 3px rgba(0, 182, 223, 0.1);
+}
+
+.password-wrapper {
+  position: relative;
+  width: 100%;
+  display: block;
+}
+
+.password-wrapper input,
+.password-wrapper .modern-input {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  height: 38px !important;
+}
+
+.password-icon {
+  right: 12px;
+  top: 50%;
+  cursor: pointer;
+  color: #888;
+  font-size: 1rem;
+  z-index: 100;
+}
+
+.select-wrapper {
+  position: relative;
+}
+
+.select-wrapper::after {
+  content: '\f078';
+  font-family: 'FontAwesome';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #888;
+  font-size: 0.75rem;
+}
+
+.modern-select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+.modern-form-actions {
+  margin-top: 20px;
+  /* Reduced */
+}
+
+.modern-btn {
+  width: 100%;
+  padding: 10px;
+  /* Reduced */
+  background: linear-gradient(135deg, #00b6df 0%, #0089a7 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 182, 223, 0.2);
+}
+
+.modern-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(0, 182, 223, 0.3);
+  background: linear-gradient(135deg, #00c9f6 0%, #009cc2 100%);
+}
+
+.form-text.text-muted {
+  font-size: 0.75rem;
+  color: #888;
+  margin-top: 2px;
+  display: block;
+}
+
+/* Mobile Customization */
+@media (max-width: 768px) {
+  .modern-modal-wrapper {
+    width: 92% !important;
+    /* Slightly wider on mobile */
+    max-width: 92% !important;
+    top: 5% !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    margin-top: 0;
+
+    /* Max height control for mobile */
+    max-height: 80vh !important;
+    /* Slightly reduced */
+
+    /* Scrollable */
+    overflow-y: auto !important;
+
+    /* Ensure bottom nav clearance */
+    margin-bottom: 60px;
+
+    padding: 15px 20px;
+    /* Even tighter padding on mobile */
+  }
+
+  .modern-modal-header h3 {
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+  }
 }
