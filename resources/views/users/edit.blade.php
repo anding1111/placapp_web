@@ -1,59 +1,64 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="form-wrapper-table col-lg-4 col-md-6 col-sm-8 col-xs-8">
-    <div class="panel w3-card-4">
-        <div class="row justify-content-center">
-            EDITAR USUARIO
-        </div>
-        <!-- /.panel-heading -->
-        <div class="card-body">
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+<div class="modern-modal-wrapper">
+    <div class="modern-modal-header">
+        <h3>EDITAR USUARIO</h3>
+    </div>
+    
+    <div class="modern-modal-body">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-            <form role="form" method="POST" action="{{ route('users.update', $user->id) }}">
-                @csrf
-                @method('PUT')
-                
-                <div class="form-group">
-                    <label for="fullName">Nombres y Apellidos</label>
-                    <input class="form-control" id="fullName" name="name" required="required" type="text" value="{{ old('name', $user->name) }}">
-                </div>
+        <form role="form" method="POST" action="{{ route('users.update', $user->id) }}">
+            @csrf
+            @method('PUT')
+            
+            <div class="modern-form-group">
+                <label for="fullName">Nombres y Apellidos</label>
+                <input class="modern-input" id="fullName" name="name" required="required" type="text" value="{{ old('name', $user->name) }}" placeholder="Ingrese nombre completo">
+            </div>
 
-                <div class="form-group">
-                    <label for="username">Correo Electrónico</label>
-                    <input class="form-control" id="username" disabled value="{{ $user->username }}">
-                    <small id="emailHelp" class="form-text text-muted">Usuario para iniciar sesión</small>
-                </div>
+            <div class="modern-form-group">
+                <label for="username">Correo Electrónico</label>
+                <input class="modern-input" id="username" disabled value="{{ $user->username }}" style="background-color: #e9ecef;">
+                <small class="form-text text-muted">Usuario para iniciar sesión</small>
+            </div>
 
-                <div class="form-group">
-                    <label for="password">Nueva Contraseña </label>
-                    <input class="form-control password1" id="password" name="password" type="password" />
+            <div class="modern-form-group">
+                <label for="password">Nueva Contraseña</label>
+                <div class="password-wrapper">
+                    <input class="modern-input password1" id="password" name="password" type="password" placeholder="••••••••">
                     <span class="fa fa-fw fa-eye password-icon show-password"></span>
-                    <small id="passwordHelp" class="form-text text-muted">Dejar en blanco para mantener la contraseña actual</small>
                 </div>
+                <small class="form-text text-muted">Dejar en blanco para mantener la contraseña actual</small>
+            </div>
 
-                <div class="form-group">
-                    <label for="password_confirmation">Repetir Contraseña</label>
-                    <input class="form-control password2" id="password_confirmation" name="password_confirmation" type="password">
-                    <small id="passwordConfirmHelp" class="form-text text-muted">Las claves deben coincidir</small>
+            <div class="modern-form-group">
+                <label for="password_confirmation">Repetir Contraseña</label>
+                <div class="password-wrapper">
+                    <input class="modern-input password2" id="password_confirmation" name="password_confirmation" type="password" placeholder="••••••••">
+                    <span class="fa fa-fw fa-eye password-icon show-password"></span>
                 </div>
+                <small class="form-text text-muted">Las claves deben coincidir</small>
+            </div>
 
-                <div class="form-group">
-                    <label for="rol">Perfíl</label>
-                    <input class="form-control" type="text" disabled value="{{ $user->role <= 1 ? 'Administrador' : 'Usuario' }}">
-                </div>
+            <div class="modern-form-group">
+                <label for="rol">Perfil</label>
+                <input class="modern-input" type="text" disabled value="{{ $user->role <= 1 ? 'Administrador' : 'Usuario' }}" style="background-color: #e9ecef;">
+            </div>
 
-                <div class="form-group">
-                    <label for="level">Seleccione Nivel</label>
-                    <select class="form-control" id="level" name="level">
+            <div class="modern-form-group">
+                <label for="level">Seleccione Nivel</label>
+                <div class="select-wrapper">
+                    <select class="modern-select" id="level" name="level">
                         @foreach($availableLevels as $value => $display)
                             <option value="{{ $value }}" {{ old('level', $user->level) == $value ? 'selected' : '' }}>
                                 {{ $display }}
@@ -61,16 +66,14 @@
                         @endforeach
                     </select>
                 </div>
+            </div>
 
-                <div class="mt-4">
-                    <input type="submit" value="Guardar Cambios" class="btn btn-info btn-large" name="submit" />
-                    <a href="{{ route('users.index') }}" class="btn btn-secondary">Cancelar</a>
-                </div>
-            </form>
-        </div>
-        <!-- /.panel-body -->
+            <div class="modern-form-actions">
+                <input type="submit" value="Guardar Cambios" class="modern-btn" name="submit" />
+                <a href="{{ route('users.index') }}" class="modern-btn-secondary">Cancelar</a>
+            </div>
+        </form>
     </div>
-    <!-- /.panel -->
 </div>
 @endsection
 
@@ -78,25 +81,26 @@
 <script>
     // Show or Hide Password
     window.addEventListener("load", function() {
-        // icono para poder interaccionar con el elemento
-        var showPassword = document.querySelector('.show-password');
-        if (showPassword) {
-            showPassword.addEventListener('click', function() {
-                // elementos input de tipo password
-                var password1 = document.querySelector('.password1');
-                var password2 = document.querySelector('.password2');
+        // Seleccionar todos los iconos de "ojo"
+        var showPasswordIcons = document.querySelectorAll('.show-password');
 
-                if (password1.type === "text") {
-                    password1.type = "password";
-                    password2.type = "password";
-                    showPassword.classList.remove('fa-eye-slash');
+        showPasswordIcons.forEach(function(icon) {
+            icon.addEventListener('click', function() {
+                // Encontrar el input hermano (dentro del mismo padre .password-wrapper)
+                var wrapper = this.closest('.password-wrapper');
+                var input = wrapper.querySelector('input');
+
+                if (input.type === "password") {
+                    input.type = "text";
+                    this.classList.remove('fa-eye');
+                    this.classList.add('fa-eye-slash');
                 } else {
-                    password1.type = "text";
-                    password2.type = "text";
-                    showPassword.classList.toggle("fa-eye-slash");
+                    input.type = "password";
+                    this.classList.remove('fa-eye-slash');
+                    this.classList.add('fa-eye');
                 }
             });
-        }
+        });
     });
 </script>
 @endpush

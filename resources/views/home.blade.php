@@ -10,6 +10,7 @@
             BUSCAR PLACA
         </h2>
         <input type="plate" id="search_textBox" autofocus="autofocus" />
+        <div class="text-white mt-2" style="font-size: 0.7em; opacity: 0.6; letter-spacing: 1px; font-weight: 300;">INGRESE 3 PRIMERAS LETRAS</div>
         <div style="margin-top: 40px;">
             <div id="suggestion_list">
                 <!-- Aquí carga la las placas encontradas -->
@@ -57,14 +58,44 @@ $(document).ready(function() {
                     if ($.trim(data)) {   
                         $("#suggestion_list").html(data);
                         var emails = document.querySelectorAll('.email');
+                        
+                        var lineBreak = null;
+                        
                         emails.forEach(function(email) {
-                            var clickCount = 0;
                             email.addEventListener('click', function(event) {
                                 console.log("Clic simple");
-                                emails.forEach(function(email) {
-                                    email.classList.remove('expand');
+                                
+                                // Remove existing line break if any
+                                if (lineBreak && lineBreak.parentNode) {
+                                    lineBreak.parentNode.removeChild(lineBreak);
+                                    lineBreak = null;
+                                }
+                                
+                                // Reset all: collapse
+                                emails.forEach(function(e) {
+                                    e.classList.remove('expand');
                                 });
+                                
+                                // Check if this is the last email in its row
+                                var nextSibling = email.nextElementSibling;
+                                var isLastInRow = false;
+                                if (nextSibling && nextSibling.classList.contains('email')) {
+                                    if (nextSibling.offsetTop > email.offsetTop) {
+                                        isLastInRow = true;
+                                    }
+                                }
+                                
                                 email.classList.add('expand');
+                                
+                                // If last in row, insert a line break before the next sibling
+                                if (isLastInRow && nextSibling) {
+                                    lineBreak = document.createElement('div');
+                                    lineBreak.style.width = '100%';
+                                    lineBreak.style.height = '0';
+                                    lineBreak.id = 'expansion-break';
+                                    nextSibling.parentNode.insertBefore(lineBreak, nextSibling);
+                                }
+                                
                                 $("#search_textBox").focus()
                                 event.stopPropagation();
                             });
@@ -74,9 +105,14 @@ $(document).ready(function() {
                             emails.forEach(function(email) {
                                 if (!email.contains(event.target)) {
                                     email.classList.remove('expand');
-                                    selectPlate(1);
                                 }
                             });
+                            // Remove line break
+                            if (lineBreak && lineBreak.parentNode) {
+                                lineBreak.parentNode.removeChild(lineBreak);
+                                lineBreak = null;
+                            }
+                            selectPlate(1);
                         });
                 
                         var xTouches = document.querySelectorAll('.x-touch');
@@ -84,6 +120,11 @@ $(document).ready(function() {
                             xTouch.addEventListener('click', function(event) {
                                 var email = this.closest('.email');
                                 email.classList.remove('expand');
+                                // Remove line break
+                                if (lineBreak && lineBreak.parentNode) {
+                                    lineBreak.parentNode.removeChild(lineBreak);
+                                    lineBreak = null;
+                                }
                                 event.stopPropagation();
                             });
                         });

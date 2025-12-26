@@ -262,6 +262,19 @@
             font-size: 15px;
             margin: 10px 0 6px;
         }
+        
+        /* Subtle 'Crear Cuenta' link */
+        .create-account-btn {
+            color: #00b6df !important;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid transparent;
+        }
+        
+        .create-account-btn:hover {
+            border-bottom: 1px solid #00b6df;
+        }
     </style>
 </head>
 
@@ -304,7 +317,7 @@
                     </div>
                 @endif
                 <p><a href="#">¿Has olvidado tu contraseña?</a></p>
-                <p><a href="{{ route('register') }}">Crear Cuenta</a></p>
+                <p style="margin-top: 15px;"><a href="{{ route('register') }}" class="create-account-btn"><i class="fas fa-user-plus" style="margin-right: 6px;"></i>Crear Cuenta</a></p>
             </div>
         </div>
     </div>

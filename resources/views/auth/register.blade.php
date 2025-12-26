@@ -63,6 +63,31 @@
         .modern-modal {
             top: 50%;
         }
+        
+        /* Icon input styling - hide default background images */
+        .icon-input {
+            position: relative;
+            background-image: none !important;
+        }
+        
+        .icon-input::before {
+            display: none !important;
+        }
+        
+        .icon-input .input-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            font-size: 14px;
+            z-index: 10;
+        }
+        
+        .icon-input input {
+            padding-left: 38px !important;
+            background-image: none !important;
+        }
     </style>
 </head>
 
@@ -97,19 +122,23 @@
                     </div>
                 @endif
 
-                <div class="form-item login">
+                <div class="form-item login icon-input">
+                    <i class="fas fa-user input-icon"></i>
                     <input type="text" name="name" placeholder="Nombre completo" autocomplete="name" required value="{{ old('name') }}">
                 </div>
 
-                <div class="form-item login">
+                <div class="form-item login icon-input">
+                    <i class="fas fa-envelope input-icon"></i>
                     <input type="email" name="email" placeholder="Correo electrónico" autocomplete="email" required value="{{ old('email') }}">
                 </div>
 
-                <div class="form-item login">
+                <div class="form-item login icon-input">
+                    <i class="fas fa-key input-icon"></i>
                     <input type="password" name="password" placeholder="Contraseña" autocomplete="new-password" required>
                 </div>
 
-                <div class="form-item login">
+                <div class="form-item login icon-input">
+                    <i class="fas fa-key input-icon"></i>
                     <input type="password" name="password_confirmation" placeholder="Confirmar contraseña" autocomplete="new-password" required>
                 </div>
 

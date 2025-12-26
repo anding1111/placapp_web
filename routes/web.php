@@ -7,6 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PlateController;
 use App\Http\Controllers\OnlineUserController;
+use App\Http\Controllers\ProfileController;
 
 
 // Rutas de autenticación (excluidas de CSRF)
@@ -31,27 +32,32 @@ Route::middleware(['auth'])->group(function () {
 
     // Home
     Route::get('/home', [HomeController::class, 'index'])->name('home');
-    
+
     // Buscar placas
     Route::post('/list-of-plate', [PlateController::class, 'searchPlates'])->name('plate.search');
-    
+
     // Usuarios en línea
     Route::get('/online-users', [OnlineUserController::class, 'index'])->name('online.users');
     Route::post('/online', [OnlineUserController::class, 'updateStatus'])->name('online.update');
     Route::post('/fetch-users-online', [OnlineUserController::class, 'fetchOnlineUsers'])->name('online.fetch');
+
+    // Perfil de Usuario
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Rutas solo para administradores
     Route::middleware([\App\Http\Middleware\AdminMiddleware::class])->group(function () {
 
         // Administración de usuarios
         Route::resource('users', UserController::class);
-        
+
         Route::get('/create', [UserController::class, 'create'])->name('users.create');
 
         // Importar datos
         Route::get('/upload', [PlateController::class, 'showUploadForm'])->name('upload.form');
         Route::post('/upload-excel', [PlateController::class, 'uploadExcel'])->name('upload.excel');
-        
+
         // Borrar datos
         Route::get('/delete', [PlateController::class, 'showDeleteForm'])->name('delete.form');
         Route::post('/delete-excel', [PlateController::class, 'deleteExcel'])->name('delete.excel');
@@ -60,7 +66,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/fetch-plates', [PlateController::class, 'fetchDataTable'])->name('plate.datatable');
         Route::post('/fetch-plate', [PlateController::class, 'fetchPlate'])->name('plate.fetch');
         Route::post('/null-plate', [PlateController::class, 'nullPlate'])->name('plate.null');
-        
+
         // API para DataTables de usuarios
         Route::post('/fetch-users', [UserController::class, 'getUsersData'])->name('user.datatable');
         Route::post('/fetch-user', [UserController::class, 'getUserDetails'])->name('user.fetch');

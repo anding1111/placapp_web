@@ -59,7 +59,7 @@ class PlatesDemoSeeder extends Seeder
         ];
 
         // Generar 500 placas demo
-        for ($i = 0; $i < 500; $i++) {
+        for ($i = 0; $i < 5000; $i++) {
             // Generación de placa:
             // 80% Probabilidad de formato nuevo/estándar (ABC123)
             // 20% Probabilidad de formato moto/antiguo (ABC12D) para variedad
