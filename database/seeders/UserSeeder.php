@@ -21,6 +21,6 @@ class UserSeeder extends Seeder
         ]);
 
         // Crear más usuarios de prueba con Factory (opcional)
-        User::factory(10)->create();
+        User::factory(2)->create();
     }
 }
