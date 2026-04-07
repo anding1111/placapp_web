@@ -1,66 +1,88 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# PlacApp Web
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+PlacApp Web es una plataforma desarrollada en Laravel diseñada para la gestión y monitoreo de placas (`plates`), vinculación segura de usuarios mediante `uuids` y manejo de acceso por tokens (`personal_access_tokens`).
 
-## About Laravel
+## 📋 Auditoría de Código y Migraciones
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+El proyecto es una aplicación web basada en el framework Laravel. Durante la auditoría se revisaron las migraciones personalizadas que estructuran la base de datos de la plataforma:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+1. **`plates`**: Almacena el registro principal de placas.
+   - Campos destacados: `plate_name` (placa), `plate_desc` (descripción), `plate_entry_date` (fecha de entrada), `plate_exit_date` (fecha de salida), `plate_level` (nivel de alerta o acceso, por defecto 3), `plate_location` y `plate_detail`.
+2. **`plates_demo`**: Tabla idéntica a `plates` pero destinada a entornos de prueba, demostraciones o registros no oficiales. El `plate_level` por defecto es 4.
+3. **`uuids`**: Tabla de vinculación que asocia identificadores únicos universales (UUID) reales o generados, directamente a un usuario (`user_id` en cascada). Incluye un estado (`status`) para habilitar o deshabilitar la vinculación.
+4. **`personal_access_tokens`**: Utilizada por Laravel Sanctum para la autenticación basada en tokens (API), permitiendo accesos seguros desde aplicaciones móviles o clientes externos.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🚀 Guía de Despliegue Local (Localhost)
 
-## Learning Laravel
+Para ejecutar este proyecto en tu entorno de desarrollo local, sigue estos pasos:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+1. **Clonar el Repositorio** (o descargar el código fuente):
+   ```bash
+   git clone <url-del-repositorio>
+   cd placapp_web
+   ```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+2. **Instalar Dependencias de PHP y Node**:
+   ```bash
+   composer install
+   npm install && npm run build
+   ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+3. **Configurar las Variables de Entorno**:
+   - Copia el archivo `.env.example` y renómbralo a `.env`.
+   - Modifica las credenciales de base de datos (`DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`) en el `.env` con las de tu entorno local (MySQL/MariaDB/PostgreSQL).
 
-## Laravel Sponsors
+4. **Generar la Clave de la Aplicación**:
+   ```bash
+   php artisan key:generate
+   ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+5. **Ejecutar Migraciones y Poblado (Seeders)**:
+   ```bash
+   php artisan migrate
+   ```
 
-### Premium Partners
+6. **Iniciar el Servidor de Desarrollo**:
+   ```bash
+   php artisan serve
+   ```
+   La aplicación estará disponible en `http://localhost:8000`.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+---
 
-## Contributing
+## 🌐 Guía de Despliegue en Hosting Compartido (cPanel sin acceso a SSH)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Si no dispones de acceso a la terminal (SSH) en tu servidor cPanel, sigue estas instrucciones paso a paso:
 
-## Code of Conduct
+### Fase 1: Preparación en Local
+Dado que no puedes ejecutar comandos en el servidor, debes preparar todo tu proyecto en local antes de subirlo:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1. En tu máquina local, asegúrate de que el archivo `.env` está configurado para producción:
+   - `APP_ENV=production`
+   - `APP_DEBUG=false`
+   - Configura las credenciales correctas de base de datos que crearás en cPanel.
+2. Ejecuta la compilación de recursos estáticos en tu máquina local:
+   ```bash
+   npm run build
+   ```
+3. Comprime todo el contenido de la carpeta de tu proyecto (incluyendo todos los archivos ocultos como `.env`) en un archivo **`.zip`**.
 
-## Security Vulnerabilities
+### Fase 2: Subida y Configuración en cPanel
+1. Accede a **cPanel > Administrador de Archivos (File Manager)**.
+2. Sube el archivo `.zip` al directorio de tu servidor, un nivel por encima de `public_html` (ej. `/home/tu_usuario/placapp_web/`).
+3. Extrae el archivo `.zip` en ese directorio.
+4. Entra a la carpeta `/home/tu_usuario/placapp_web/public/`, **selecciona todos los archivos** y muévelos adentro de la carpeta `/home/tu_usuario/public_html/` (la carpeta pública del servidor).
+5. Como moviste el archivo `index.php`, debes actualizar sus rutas correspondientes. Edita `/home/tu_usuario/public_html/index.php`:
+   - Cambia `require __DIR__.'/../storage/framework/maintenance.php';`
+     a `require __DIR__.'/../placapp_web/storage/framework/maintenance.php';`
+   - Cambia `require __DIR__.'/../vendor/autoload.php';`
+     a `require __DIR__.'/../placapp_web/vendor/autoload.php';`
+   - Cambia `$app = require_once __DIR__.'/../bootstrap/app.php';`
+     a `$app = require_once __DIR__.'/../placapp_web/bootstrap/app.php';`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Fase 3: Base de Datos y Optimización
+1. En **cPanel > Bases de Datos MySQL**, crea una nueva base de datos, crea un usuario con contraseña, y asigna todos los privilegios de ese usuario a la base de datos. Asegúrate de poner estos mismos datos exactos en tu `.env`.
+2. Como no puedes ejecutar `php artisan migrate`, entra en tu base de datos local usando un programa como phpMyAdmin (o DBeaver), exporta las tablas (archivo `.sql`) e **infíltralas/impórtalas** directamente en la base de datos creada usando phpMyAdmin de cPanel.
+3. (Opcional) Crea un script cron en cPanel si la aplicación maneja tareas en segundo plano.
 
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+¡Con estos pasos tu aplicación PlacApp Web debería estar corriendo en producción con cPanel de manera correcta!
