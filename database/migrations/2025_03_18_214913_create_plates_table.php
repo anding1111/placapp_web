@@ -22,6 +22,9 @@ return new class extends Migration
             $table->string('plate_location', 50)->default('');
             $table->string('plate_detail', 200)->default('');
             $table->timestamps();
+
+            // Índices compuestos optimizados para búsquedas
+            $table->index(['plate_name', 'plate_enable', 'plate_level'], 'plate_name');
         });
     }
 

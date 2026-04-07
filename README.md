@@ -28,9 +28,11 @@ Para ejecutar este proyecto en tu entorno de desarrollo local, sigue estos pasos
    npm install && npm run build
    ```
 
-3. **Configurar las Variables de Entorno**:
+3. **Configurar las Variables de Entorno y la Base de Datos**:
+   - Asegúrate de tener instalado tu motor de base de datos local (MySQL, MariaDB o PostgreSQL).
+   - Crea una nueva base de datos vacía. Puedes usar un cliente de interfaz gráfica (como phpMyAdmin o DBeaver) o mediante terminal con: `CREATE DATABASE placapp_db;`.
    - Copia el archivo `.env.example` y renómbralo a `.env`.
-   - Modifica las credenciales de base de datos (`DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`) en el `.env` con las de tu entorno local (MySQL/MariaDB/PostgreSQL).
+   - Modifica las credenciales de base de datos (`DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`) en el `.env` con los datos correspondientes.
 
 4. **Generar la Clave de la Aplicación**:
    ```bash
@@ -80,9 +82,43 @@ Dado que no puedes ejecutar comandos en el servidor, debes preparar todo tu proy
    - Cambia `$app = require_once __DIR__.'/../bootstrap/app.php';`
      a `$app = require_once __DIR__.'/../placapp_web/bootstrap/app.php';`
 
-### Fase 3: Base de Datos y Optimización
-1. En **cPanel > Bases de Datos MySQL**, crea una nueva base de datos, crea un usuario con contraseña, y asigna todos los privilegios de ese usuario a la base de datos. Asegúrate de poner estos mismos datos exactos en tu `.env`.
-2. Como no puedes ejecutar `php artisan migrate`, entra en tu base de datos local usando un programa como phpMyAdmin (o DBeaver), exporta las tablas (archivo `.sql`) e **infíltralas/impórtalas** directamente en la base de datos creada usando phpMyAdmin de cPanel.
+### Fase 3: Creación de la Base de Datos y Optimización
+1. En tu panel de control, dirígete a **cPanel > Bases de Datos MySQL**.
+   - Haz clic en **Crear nueva base de datos**.
+   - Haz clic en **Crear usuario** (y guarda la contraseña de forma segura).
+   - Añade el usuario a la base de datos para darle **Todos los privilegios**.
+   - Anota el nombre de la base de datos y usuario (ej. `tu_usuario_placapp_db`) y actualízalos en tu archivo `.env`.
+2. Como no puedes ejecutar `php artisan migrate`, entra en tu base de datos local usando un programa como phpMyAdmin (o DBeaver), exporta las tablas (archivo `.sql`) e **infíltralas/impórtalas** directamente en la base de datos recién creada usando phpMyAdmin de cPanel.
 3. (Opcional) Crea un script cron en cPanel si la aplicación maneja tareas en segundo plano.
 
-¡Con estos pasos tu aplicación PlacApp Web debería estar corriendo en producción con cPanel de manera correcta!
+---
+
+## 💻 Guía de Despliegue en VPS (Ubuntu / Debian con SSH)
+
+Si tienes un servidor privado o cloud propio con acceso raíz (SSH), sigue estos pasos para desplegar a nivel profesional:
+
+1. **Acceder a tu VPS por SSH**: `ssh usuario@tu_ip_del_vps`
+2. **Crear la Base de Datos (ej. MySQL/MariaDB)**:
+   ```bash
+   mysql -u root -p
+   ```
+   ```sql
+   CREATE DATABASE placapp_db;
+   CREATE USER 'placapp_user'@'localhost' IDENTIFIED BY 'tu_contraseña_segura';
+   GRANT ALL PRIVILEGES ON placapp_db.* TO 'placapp_user'@'localhost';
+   FLUSH PRIVILEGES;
+   EXIT;
+   ```
+3. **Clonar e Instalar el Proyecto**:
+   - Clona el repositorio en `/var/www/placapp_web`.
+   - Copia `.env.example` a `.env` e ingresa la base de datos creada en el paso 2.
+   - Ejecuta `composer install`, luego `php artisan key:generate` y **`php artisan migrate`**.
+   - Ejecuta `npm install` y `npm run build`.
+4. **Permisos y Servidor Web**:
+   - Configura Nginx o Apache apuntando el VirtualHost directamente a la carpeta `public/` del proyecto.
+   - Asigna permisos en Laravel para que el servidor web pueda operar:
+   ```bash
+   sudo chown -R www-data:www-data /var/www/placapp_web/storage /var/www/placapp_web/bootstrap/cache
+   ```
+
+¡Con estos pasos tu aplicación PlacApp Web debería estar corriendo y migrando óptimamente en el escenario que elijas!
