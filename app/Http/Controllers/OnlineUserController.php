@@ -17,21 +17,30 @@ class OnlineUserController extends Controller
     }
     
     /**
-     * Actualiza el estado en línea del usuario actual
+     * Actualiza el estado en línea del usuario actual con optimización de base de datos
      */
     public function updateStatus(Request $request)
     {
         $user = Auth::user();
         
         if ($user) {
-            $user->online_status = 1;
-            $user->last_connection = now();
-            $user->save();
+            // Optimización: Solo guardar en DB si han pasado más de 15 segundos 
+            // Esto reduce la carga de escritura en un 80% si el polling es de 3s
+            $shouldUpdate = !$user->last_connection || $user->last_connection->diffInSeconds(now()) > 15;
             
-            // Limpiar usuarios inactivos (más de 1 minuto)
-            User::where('online_status', 1)
-                ->where('last_connection', '<', now()->subMinutes(1))
-                ->update(['online_status' => 0]);
+            if ($shouldUpdate || $user->online_status == 0) {
+                $user->online_status = 1;
+                $user->last_connection = now();
+                $user->save();
+            }
+            
+            // Limpieza probabilística (Garbage Collection): Solo 1 de cada 10 peticiones 
+            // realiza la limpieza costosa de otros usuarios inactivos
+            if (rand(1, 10) === 1) {
+                User::where('online_status', 1)
+                    ->where('last_connection', '<', now()->subMinutes(2))
+                    ->update(['online_status' => 0]);
+            }
                 
             return response()->json(['success' => true]);
         }
@@ -40,19 +49,19 @@ class OnlineUserController extends Controller
     }
     
     /**
-     * Obtiene la lista de usuarios en línea
+     * Obtiene la lista de usuarios en línea optimizada
      */
     public function fetchOnlineUsers()
     {
-        // Limpiar usuarios inactivos primero
+        // En la vista de lista, somos un poco más agresivos con la limpieza para mantenerla real
         User::where('online_status', 1)
-            ->where('last_connection', '<', now()->subSeconds(5))
+            ->where('last_connection', '<', now()->subSeconds(10))
             ->update(['online_status' => 0]);
         
-        // Obtener usuarios activos
+        // Obtener usuarios activos con selección de campos mínima
         $users = User::where('online_status', 1)
                     ->where('user_status', '>', 0)
-                    ->select('id as id', 'username as user', 'name', 'role')
+                    ->select('id', 'username as user', 'name', 'role')
                     ->get();
         
         return response()->json($users);

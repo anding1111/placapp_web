@@ -2,8 +2,16 @@
 
 // Función para abrir URLs basadas en la navegación
 function openURL(page) {
+    // Detener el tracker antes de navegar para evitar peticiones canceladas
+    if (window.onlineTrackerInstance) {
+        window.onlineTrackerInstance.stop();
+    }
+
     // Utilizar rutas nombradas de Laravel en lugar de URL directas
     switch (page) {
+        case "home":
+            window.location.href = laravelRoutes.home || "/home";
+            break;
         case "upload_file":
             window.location.href = laravelRoutes.upload || "/upload";
             break;
@@ -17,6 +25,9 @@ function openURL(page) {
         case "manage_accounts":
             window.location.href = laravelRoutes.users || "/users";
             break;
+        case "person":
+            window.location.href = laravelRoutes.profile || "/profile";
+            break;
         default:
             window.location.href = laravelRoutes.home || "/home";
             break;
@@ -25,11 +36,18 @@ function openURL(page) {
 
 var navItems = document.querySelectorAll(".mobile-bottom-nav__item");
 navItems.forEach(function (e, i) {
-    e.addEventListener("click", function (e) {
-        navItems.forEach(function (e2, i2) {
+    e.addEventListener("click", function () {
+        navItems.forEach(function (e2) {
             e2.classList.remove("mobile-bottom-nav__item--active");
         });
         this.classList.add("mobile-bottom-nav__item--active");
+
+        // Activar la navegación basada en el contenido del icono
+        var iconElement = this.querySelector(".mobile-bottom-nav__item-content i");
+        if (iconElement) {
+            var page = iconElement.innerText.trim();
+            openURL(page);
+        }
     });
 });
 
@@ -130,12 +148,8 @@ $helpText.on('webkitAnimationEnd MSAnimationEnd oAnimationEnd animationend', fun
     }, 5000);
 });
 
-// Manejo de botones de navegación
-var $url_button = $(".url_button");
-$url_button.on('click', function () {
-    var firstChildText = $(this).find('i:first-child').text();
-    openURL(firstChildText);
-});
+// Los botones de navegación ya se manejan en el listener de .mobile-bottom-nav__item al inicio del archivo
+// para evitar duplicidad de eventos y peticiones canceladas.
 
 var $nav_bar = $(".mobile-bottom-nav"),
     $color_selector = $(".color-selector");
@@ -259,42 +273,53 @@ function isMobile() {
 class OnlineTracker {
     constructor(options = {}) {
         this.userId = options.userId;
-        this.interval = options.interval || 30000; // 30 seconds default
+        this.interval = options.interval || 30000;
         this.retryAttempts = options.retryAttempts || 3;
         this.retryDelay = options.retryDelay || 5000;
-        this.endpoint = options.endpoint || '/online'; // Ruta por defecto en Laravel
+        this.endpoint = options.endpoint || '/online';
         this.currentRetry = 0;
         this.active = false;
-        this.csrfToken = options.csrfToken || $('meta[name="csrf-token"]').attr('content');
+        this.isUpdating = false;
+        this.lastUpdateTime = 0;
+        this.timeoutId = null;
+    }
+
+    // Método robusto para obtener el token CSRF actualizado
+    getCsrfToken() {
+        return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
     }
 
     start() {
         if (this.active) return;
         this.active = true;
         this.updateStatus();
-        this.intervalId = setInterval(() => this.updateStatus(), this.interval);
         
-        // Add event listeners for tab visibility and page unload
-        document.addEventListener('visibilitychange', () => this.handleVisibilityChange());
-        window.addEventListener('beforeunload', () => this.handleUnload());
+        // Listeners globales (solo una vez)
+        if (!this.initialized) {
+            document.addEventListener('visibilitychange', () => this.handleVisibilityChange());
+            window.addEventListener('beforeunload', () => this.handleUnload());
+            this.initialized = true;
+        }
     }
 
     stop() {
         this.active = false;
-        if (this.intervalId) {
-            clearInterval(this.intervalId);
+        if (this.timeoutId) {
+            clearTimeout(this.timeoutId);
+            this.timeoutId = null;
         }
     }
 
     async updateStatus() {
-        if (!this.active) return;
+        if (!this.active || this.isUpdating) return;
 
+        this.isUpdating = true;
         try {
             const response = await fetch(this.endpoint, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': this.csrfToken,
+                    'X-CSRF-TOKEN': this.getCsrfToken(),
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
@@ -309,10 +334,17 @@ class OnlineTracker {
             
             // Reset retry counter on successful update
             this.currentRetry = 0;
+            this.lastUpdateTime = Date.now();
 
         } catch (error) {
             console.error('Error updating online status:', error);
             await this.handleError();
+        } finally {
+            this.isUpdating = false;
+            // Programar la siguiente actualización solo después de que esta terminó
+            if (this.active) {
+                this.timeoutId = setTimeout(() => this.updateStatus(), this.interval);
+            }
         }
     }
 
@@ -335,15 +367,18 @@ class OnlineTracker {
     }
 
     handleUnload() {
-        // Attempt to send a final status update with navigator.sendBeacon
+        // Evitar múltiples actualizaciones si ya se envió una exitosa recientemente (ej: hace menos de 5 segundos)
+        if (Date.now() - this.lastUpdateTime < 5000) return;
+
+        // Intentar enviar una actualización final con navigator.sendBeacon
         if (navigator.sendBeacon) {
-            const blob = new Blob([JSON.stringify({
-                user_id: this.userId,
-                _token: this.csrfToken,
-                status: 'offline'
-            })], { type: 'application/json' });
+            // Usar URLSearchParams para que Laravel pueda validar el CSRF Token en el cuerpo de la petición
+            const params = new URLSearchParams();
+            params.append('user_id', this.userId);
+            params.append('_token', this.getCsrfToken());
+            params.append('status', 'offline');
             
-            navigator.sendBeacon(this.endpoint, blob);
+            navigator.sendBeacon(this.endpoint, params);
         }
     }
 }

@@ -76,16 +76,16 @@
         
         .icon-input .input-icon {
             position: absolute;
-            left: 12px;
+            left: 16px;
             top: 50%;
             transform: translateY(-50%);
-            color: #888;
-            font-size: 14px;
+            color: rgba(255, 255, 255, 0.4); /* Gris claro cálido estilo iOS */
+            font-size: 16px;
             z-index: 10;
         }
         
         .icon-input input {
-            padding-left: 38px !important;
+            padding-left: 44px !important;
             background-image: none !important;
         }
     </style>
@@ -93,9 +93,9 @@
 
 <body class="body_display">
     <div id="displayed">
-        <div class="form form-wrapper w3-card-4w padding modern-modal">
+        <div class="form auth-wrapper modern-modal">
             <div align="center">
-                <div class="avatar">
+                <div class="auth-avatar">
                     <img src="{{ asset('img/Logo_Placapp.png') }}" alt="Avatar">
                 </div>
             </div>
@@ -122,28 +122,28 @@
                     </div>
                 @endif
 
-                <div class="form-item login icon-input">
+                <div class="auth-item login icon-input">
                     <i class="fas fa-user input-icon"></i>
-                    <input type="text" name="name" placeholder="Nombre completo" autocomplete="name" required value="{{ old('name') }}">
+                    <input type="text" name="name" class="auth-input" placeholder="Nombre completo" autocomplete="name" required value="{{ old('name') }}">
                 </div>
 
-                <div class="form-item login icon-input">
+                <div class="auth-item login icon-input">
                     <i class="fas fa-envelope input-icon"></i>
-                    <input type="email" name="email" placeholder="Correo electrónico" autocomplete="email" required value="{{ old('email') }}">
+                    <input type="email" name="email" class="auth-input" placeholder="Correo electrónico" autocomplete="email" required value="{{ old('email') }}">
                 </div>
 
-                <div class="form-item login icon-input">
+                <div class="auth-item login icon-input">
                     <i class="fas fa-key input-icon"></i>
-                    <input type="password" name="password" placeholder="Contraseña" autocomplete="new-password" required>
+                    <input type="password" name="password" class="auth-input" placeholder="Contraseña" autocomplete="new-password" required>
                 </div>
 
-                <div class="form-item login icon-input">
+                <div class="auth-item login icon-input">
                     <i class="fas fa-key input-icon"></i>
-                    <input type="password" name="password_confirmation" placeholder="Confirmar contraseña" autocomplete="new-password" required>
+                    <input type="password" name="password_confirmation" class="auth-input" placeholder="Confirmar contraseña" autocomplete="new-password" required>
                 </div>
 
-                <div class="button-panel login">
-                    <button type="submit" class="button">Registrarse</button>
+                <div class="auth-button-panel login">
+                    <button type="submit" class="auth-button">Registrarse</button>
                 </div>
             </form>
             

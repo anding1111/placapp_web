@@ -69,7 +69,7 @@
 
 <body>
     <div class="close-container">
-        <i class="fas fa-power-off"></i>
+        <i class="fas fa-sign-out-alt"></i>
         <label>Salir</label>
         <input type="hidden" id="my-id" value="{{ Auth::id() }}">
     </div>
@@ -136,32 +136,6 @@
 
     <script>
         $(document).ready(function () {
-            // Asegúrate de que la clase 'url_button' funcione para la navegación
-            $('.url_button').on('click', function () {
-                var icon = $(this).find('i:first-child').text();
-                switch (icon) {
-                    case 'home':
-                        window.location.href = "{{ route('home') }}";
-                        break;
-                    case 'person':
-                        window.location.href = "{{ route('profile.index') }}";
-                        break;
-                    case 'upload_file':
-                        window.location.href = "{{ route('upload.form') }}";
-                        break;
-                    case 'delete':
-                        window.location.href = "{{ route('delete.form') }}";
-                        break;
-                    case 'manage_accounts':
-                        window.location.href = "{{ route('users.index') }}";
-                        break;
-                    case 'exit_to_app':
-                    case 'logout':
-                        window.location.href = "{{ route('logout') }}";
-                        break;
-                }
-            });
-
             // Iniciar el rastreador de estado en línea
             if (typeof tracker !== 'undefined') {
                 tracker.start();
@@ -175,12 +149,13 @@
     @auth
         <script>
             document.addEventListener('DOMContentLoaded', function () {
-                const tracker = new OnlineTracker({
-                    interval: 3000, // 3 segundos
+                // Asignamos a window para control global (detenerlo al cambiar de vista)
+                window.onlineTrackerInstance = new OnlineTracker({
+                    interval: 3000, 
                     endpoint: '{{ route("online.update") }}',
-                    csrfToken: "{{ csrf_token() }}"
+                    userId: "{{ Auth::id() }}"
                 });
-                tracker.start();
+                window.onlineTrackerInstance.start();
             });
         </script>
     @endauth

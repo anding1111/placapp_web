@@ -16,7 +16,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('users.index');
+        $authUser = Auth::user();
+        $availableLevels = $this->getAvailableLevels($authUser->level);
+        
+        return view('users.index', compact('availableLevels'));
     }
 
     /**
@@ -68,6 +71,10 @@ class UserController extends Controller
         $user->last_connection = now();
         $user->save();
         
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json(['status' => 'success', 'message' => 'Usuario agregado correctamente']);
+        }
+
         return redirect()->route('users.index')->with('success', 'Usuario agregado correctamente');
     }
 
@@ -130,6 +137,10 @@ class UserController extends Controller
         
         $user->save();
         
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json(['status' => 'success', 'message' => 'Usuario actualizado correctamente']);
+        }
+
         return redirect()->route('users.index')->with('success', 'Usuario actualizado correctamente');
     }
 
@@ -168,7 +179,31 @@ class UserController extends Controller
     }
     
     /**
-     * Obtener información de un usuario específico para el modal
+     * Obtener información de un usuario específico en formato JSON para el modal
+     */
+    public function fetchUser(Request $request, $id)
+    {
+        $user = User::find($id);
+        $authUser = Auth::user();
+
+        if (!$user || !$this->canManageUser($authUser, $user)) {
+            return response()->json(['status' => 'error', 'message' => 'No autorizado'], 403);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'username' => $user->username,
+                'rol' => $user->role, // Asegurarnos de usar el nombre correcto del campo (role)
+                'level' => $user->level
+            ]
+        ]);
+    }
+
+    /**
+     * Obtener información de un usuario específico para el modal (Legacy HTML)
      */
     public function getUserDetails(Request $request)
     {
@@ -180,34 +215,15 @@ class UserController extends Controller
                    ->first();
                    
         if (!$user || !$this->canManageUser($authUser, $user)) {
-            return '<p>No se encontró el usuario o no tienes permisos para verlo</p>';
+            return '<p>No se encontró el usuario o no tienes permisos</p>';
         }
         
-        // Construir HTML para el modal
-        $html = '<div class="row" style="font-size:12px; margin-left:10px;">';
-        $html .= '<div class="col-sm-6 invoice-col">';
-        $html .= '<input type="hidden" id="numInvoice" value="'.$userId.'">';
+        // Formato Ultra-Minimalista para Alerta iOS
+        $html = '<input type="hidden" id="numInvoice" value="'.$userId.'">';
+        $html .= '<div style="margin-top: 10px;">';
+        $html .= '    <span style="display:block; font-weight:600; color:#fff; font-size:15px; margin-bottom:4px;">'.$user->name.'</span>';
+        $html .= '    <span style="display:block; color:rgba(255,255,255,0.5); font-size:12px;">@'.$user->username.'</span>';
         $html .= '</div>';
-        $html .= '</div>';
-        
-        $html .= '<div class="col-sm-12" style="margin-top: 15px;">';
-        $html .= '<table class="table table-hover" border="0" width="100%">';
-        $html .= '<thead>';
-        $html .= '<tr>';
-        $html .= '<th style="width:40%">Nombre</th>';
-        $html .= '<th style="width:35%; text-align:right">Usuario</th>';
-        $html .= '<th style="width:25%; text-align:right">Perfil</th>';
-        $html .= '</tr>';
-        $html .= '</thead>';
-        $html .= '<tbody style="max-height: 30vh; overflow-y: auto; overflow-x: hidden;">';
-        
-        $html .= '<tr>';
-        $html .= '<td style="width:40%">'.$user->name.'</td>';
-        $html .= '<td style="text-align:right; width:35%">'.$user->username.'</td>';
-        $html .= '<td style="text-align:right; width:25%">'.($user->role == 1 ? 'Administrador' : 'Usuario').'</td>';
-        $html .= '</tr>';
-        
-        $html .= '</tbody></table></div>';
         
         return $html;
     }

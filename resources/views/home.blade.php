@@ -11,7 +11,7 @@
         </h2>
         <input type="plate" id="search_textBox" autofocus="autofocus" />
         <div class="text-white mt-2" style="font-size: 0.7em; opacity: 0.6; letter-spacing: 1px; font-weight: 300;">INGRESE 3 PRIMERAS LETRAS</div>
-        <div style="margin-top: 40px;">
+        <div style="margin-top: 15px;">
             <div id="suggestion_list">
                 <!-- Aquí carga la las placas encontradas -->
             </div>
@@ -20,18 +20,19 @@
 </div>
 
 <div class="color-selector" style="--blue: #50C4ED; --red: #FC2947; --yellow: #F4E931; --green: #70E000; --pink: #FF96C5; --black: #2b2b28;">
+    <div class="color-selector-header">ANTIGÜEDAD</div>
     <input type="radio" id="red" name="colors" />
-    <label class="colors" for="red" />Último Día</label>
+    <label class="colors" for="red">Hoy (Día)</label>
     <input type="radio" id="green" name="colors" />
-    <label class="colors" for="green" />Última Semana</label>
+    <label class="colors" for="green">Semana</label>
     <input type="radio" id="pink" name="colors" />
-    <label class="colors" for="pink" />Último Mes</label>
+    <label class="colors" for="pink">Mes</label>
     <input type="radio" id="blue" name="colors" />
-    <label class="colors" for="blue" />Últimos 3 Meses</label>
+    <label class="colors" for="blue">3 Meses</label>
     <input type="radio" id="yellow" name="colors" />
-    <label class="colors" for="yellow" />Últimos 6 Meses</label>
+    <label class="colors" for="yellow">6 Meses</label>
     <input type="radio" id="black" name="colors" />
-    <label class="colors" for="black" />Más de 6 Meses</label>
+    <label class="colors" for="black">+6 Meses</label>
 </div>
 @endsection
 
@@ -51,13 +52,25 @@ $(document).ready(function() {
                     keyword: input.val()
                 },
                 beforeSend: function() {
-                    $("#search_textBox").css("background", "#FFF url(LoaderIcon.gif) no-repeat 165px");
+                    // Solo inyectar la animación de carga sin destruir el color base del Dark Mode
+                    $("#search_textBox").css({
+                        "background-image": "url('LoaderIcon.gif')",
+                        "background-repeat": "no-repeat",
+                        "background-position": "calc(100% - 15px) center"
+                    });
                 },
                 success: function(data) {
-                    $("#search_textBox").css("background", "#FFF");
+                    // Limpiar el loader sin alterar el color
+                    $("#search_textBox").css("background-image", "none");
                     if ($.trim(data)) {   
                         $("#suggestion_list").html(data);
                         var emails = document.querySelectorAll('.email');
+                        
+                        if (emails.length > 2) {
+                            $(".avatar").slideUp(250);
+                        } else {
+                            $(".avatar").slideDown(250);
+                        }
                         
                         var lineBreak = null;
                         
@@ -86,6 +99,9 @@ $(document).ready(function() {
                                 }
                                 
                                 email.classList.add('expand');
+                                
+                                // Ocultar el logo de punisher temporalmente para dar espacio al Modal
+                                $(".avatar").slideUp(250);
                                 
                                 // If last in row, insert a line break before the next sibling
                                 if (isLastInRow && nextSibling) {
@@ -125,6 +141,10 @@ $(document).ready(function() {
                                     lineBreak.parentNode.removeChild(lineBreak);
                                     lineBreak = null;
                                 }
+                                // Restaurar el logo solo si hay 2 o menos elementos en la lista
+                                if (emails.length <= 2) {
+                                    $(".avatar").slideDown(250);
+                                }
                                 event.stopPropagation();
                             });
                         });
@@ -136,8 +156,10 @@ $(document).ready(function() {
             var newValue = input.val().substr(3);
             input.val(newValue);
             $("#suggestion_list").hide();
+            $(".avatar").slideDown(250); // Restaurar logo
         } else {
             $("#suggestion_list").hide();
+            $(".avatar").slideDown(250); // Restaurar logo al vaciar
         }
     });
 });
@@ -146,6 +168,7 @@ function selectPlate(val) {
     $("#search_textBox").val("");
     $("#search_textBox").focus()
     $("#suggestion_list").hide();
+    $(".avatar").slideDown(250); // Restaurar logo globalmente
 }
 </script>
 @endpush

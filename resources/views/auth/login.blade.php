@@ -280,9 +280,9 @@
 
 <body>
     <div id="displayed">
-        <div class="form form-wrapper w3-card-4w padding">
+        <div class="form auth-wrapper">
             <div align="center">
-                <div class="avatar">
+                <div class="auth-avatar">
                     <img src="{{ asset('img/Logo_Placapp.png') }}" alt="Avatar">
                 </div>
             </div>
@@ -291,17 +291,17 @@
                 @csrf
                 <h3 style="text-align: center;">Iniciar Sesión</h3>
 
-                <div class="form-item login">
-                    <input type="text" name="username" placeholder="Usuario" autocomplete="username" autocorrect="off" autocapitalize="none" spellcheck="false" required value="{{ old('username') }}">
+                <div class="auth-item login">
+                    <input type="text" name="username" class="auth-input" placeholder="Usuario" autocomplete="username" autocorrect="off" autocapitalize="none" spellcheck="false" required value="{{ old('username') }}">
                 </div>
 
-                <div class="form-item login">
-                    <input type="password" name="password" placeholder="Contraseña" autocomplete="current-password" autocorrect="off" autocapitalize="none" spellcheck="false">
+                <div class="auth-item login">
+                    <input type="password" name="password" class="auth-input" placeholder="Contraseña" autocomplete="current-password" autocorrect="off" autocapitalize="none" spellcheck="false">
                     <input type="hidden" name="uuid" id="uuid-field">
                 </div>
 
-                <div class="button-panel login">
-                    <button type="submit" class="button" id="login-button">Iniciar</button>
+                <div class="auth-button-panel login">
+                    <button type="submit" class="auth-button" id="login-button">Iniciar</button>
                 </div>
             </form>
             <div class="reminder">
@@ -481,10 +481,6 @@
                     reminderDiv.innerHTML = `<div style="color: #dc3545;">Error al iniciar sesión. Por favor, intenta nuevamente.</div>`;
                 });
             });
-            // Enfocar el campo de usuario después de un breve retraso
-            setTimeout(() => {
-                document.querySelector('input[name="username"]').focus();
-            }, 500);
         });
         
         // Mostrar el modal de dispositivo no autorizado

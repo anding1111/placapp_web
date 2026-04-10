@@ -70,6 +70,7 @@ Route::middleware(['auth'])->group(function () {
         // API para DataTables de usuarios
         Route::post('/fetch-users', [UserController::class, 'getUsersData'])->name('user.datatable');
         Route::post('/fetch-user', [UserController::class, 'getUserDetails'])->name('user.fetch');
+        Route::post('/fetch-user-json/{id}', [UserController::class, 'fetchUser'])->name('user.fetch.json');
         Route::post('/null-user', [UserController::class, 'nullUser'])->name('user.null');
     });
 });
