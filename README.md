@@ -52,58 +52,108 @@ Para ejecutar este proyecto en tu entorno de desarrollo local, sigue estos pasos
 
 ---
 
-## 🌐 Guía de Despliegue en Hosting Compartido (FTP / Admin. de Archivos)
+## 🌐 Guía de Despliegue Maestro (Hosting Compartido sin SSH)
 
-Si planeas desplegar en un hosting tradicional (cPanel, Plesk, etc.) donde no tienes acceso a terminal (SSH), sigue estos pasos detallados para asegurar que Laravel funcione correctamente:
+Esta guía está diseñada para un despliegue manual mediante **FTP o Administrador de Archivos Web**, optimizando el rendimiento en local antes de la subida.
 
-### Fase 1: Preparación local
-Como no se pueden ejecutar comandos en el servidor, debemos preparar el "corazón" de la app en tu PC:
-1. **Limpieza de Caché:** Antes de subir, limpia las rutas y configuraciones locales para evitar errores de rutas absolutas:
-   - Elimina manualmente los archivos dentro de `storage/framework/views/` (pero no la carpeta).
-   - Elimina los archivos dentro de `storage/framework/sessions/`.
-   - Elimina `bootstrap/cache/config.php` y `bootstrap/cache/routes.php` si existen.
-2. **Dependencias:** Asegúrate de que la carpeta `vendor` esté completa (después de un `composer install`). No necesitas subir la carpeta `node_modules`.
-3. **Recursos Estáticos:** El proyecto ya cuenta con sus estilos y JS listos en la carpeta `public/`, por lo que **no es necesario ejecutar npm install o npm build**.
-4. **Comprimir:** Comprime todo el contenido en un archivo `.zip` (incluyendo archivos ocultos como `.env`).
+### Fase 1: Preparación "Clean Slate" (En tu PC Local)
+Antes de comprimir el proyecto, debemos limpiar el entorno y optimizarlo para producción. Abre una terminal en tu proyecto local y ejecuta:
 
-### Fase 2: Subida y Estructura de Carpetas (Método Seguro)
-Para evitar que el código fuente sea accesible desde la web, te recomiendo esta estructura:
+1. **Limpieza total de Caches:**
+   ```bash
+   php artisan optimize:clear
+   ```
+2. **Dependencias de Producción:** (Elimina herramientas de testeo y debug para mayor ligereza):
+   ```bash
+   composer install --no-dev --optimize-autoloader
+   ```
+3. **Optimización de Carga:** (Genera archivos de caché que el servidor usará directamente):
+   ```bash
+   php artisan config:cache
+   php artisan route:cache
+   php artisan view:cache
+   ```
 
-1. **Subida:** Sube tu `.zip` a la raíz de tu hosting (un nivel ARRIBA de la carpeta `public_html` o `www`).
-2. **Extracción:** Extrae el contenido en una carpeta dedicada (ejemplo: `/hosting/usuario/placapp_core/`).
-3. **Punto de Entrada:** 
-   - Entra a la carpeta `placapp_core/public/` y **mueve todos sus archivos** (incluyendo el `.htaccess` e `index.php`) a la carpeta pública del servidor (`public_html/`).
-   - Ahora tu código fuente está seguro en `placapp_core/` y solo el punto de entrada es público en `public_html/`.
+### Fase 2: El Paquete ZIP Perfecto
+No todo lo que tienes en tu PC debe ir al servidor. Aquí tienes el checklist de lo que debes incluir en tu archivo `placapp_web.zip`:
 
-### Fase 3: Ajuste Crítico de Rutas (El paso más importante)
-Como moviste el archivo `index.php`, debes decirle dónde encontrar el núcleo de Laravel. Edita `public_html/index.php` y ajusta las siguientes líneas:
+**✅ LO QUE SÍ DEBES INCLUIR:**
+- `app/`, `bootstrap/`, `config/`, `database/`
+- `lang/`, `resources/`, `routes/`, `vendor/` (¡Indispensable!)
+- `storage/` (Asegúrate de que `storage/framework/views` esté vacío pero que la carpeta exista).
+- `public/` (Contiene tus estilos CSS y JS nativos).
+- `.env` y `.env.example`
+- `artisan`, `composer.json`, `index.php`
+
+**❌ LO QUE DEBES OMITIR (Excluir del ZIP):**
+- `node_modules/` (Es pesado y no se usa en producción).
+- `.git/` y archivos `.gitignore` / `.gitattributes`.
+- `tests/` (No ejecutamos pruebas en hosting compartido).
+- Archivos `.log` viejos en `storage/logs/`.
+
+---
+
+### Fase 3: Estructura de Carpetas en el Servidor (Método Seguro)
+Para proteger tu código, utilizaremos el método de **Archivos sobre Raíz**. Tu Administrador de Archivos debería verse así:
+
+```text
+/home/tu_usuario/
+├── placapp_core/        <-- (Aquí extraes TODO el contenido del ZIP, excepto la carpeta public)
+└── public_html/         <-- (Aquí mueves solo el CONTENIDO de la carpeta public)
+    ├── css/
+    ├── js/
+    ├── img/
+    ├── .htaccess        <-- (El guardián del sitio)
+    └── index.php        <-- (El punto de entrada)
+```
+
+### Fase 4: Configuración de Rutas (index.php)
+Edita el archivo `public_html/index.php` y ajusta las rutas para que apunten a tu carpeta core. Busca y modifica estas **3 líneas críticas**:
 
 ```php
-// Cambia estas líneas (aproximadamente líneas 34 y 47)
-require __DIR__.'/../vendor/autoload.php';
-$app = require_once __DIR__.'/../bootstrap/app.php';
+// 1. Modificar la ruta del mantenimiento (Línea ~34)
+if (file_exists($maintenance = __DIR__.'/../placapp_core/storage/framework/maintenance.php')) {
+    require $maintenance;
+}
 
-// Por estas (ajustando al nombre de tu carpeta):
+// 2. Modificar el Autoload de Composer (Línea ~47)
 require __DIR__.'/../placapp_core/vendor/autoload.php';
+
+// 3. Modificar el punto de inicio de la App (Línea ~61)
 $app = require_once __DIR__.'/../placapp_core/bootstrap/app.php';
 ```
 
-### Fase 4: Configuración final y Base de Datos
-1. **Archivo .env:** Edita el archivo `.env` dentro de `placapp_core/`:
-   - `APP_ENV=production`
-   - `APP_DEBUG=false` (¡Crítico para seguridad!)
-   - `APP_URL=https://tudominio.com`
-   - Ingresa las credenciales de la base de datos que creaste en tu panel (cPanel MySQL).
-2. **Migración sin SSH:** Como no puedes ejecutar `artisan migrate`:
-   - **Opción phpMyAdmin:** Exporta tu base de datos local como archivo `.sql` e impórtala usando phpMyAdmin en tu hosting.
-   - **Opción de Emergencia:** Puedes crear temporalmente una ruta en `web.php` para ejecutar las migraciones:
-     ```php
-     Route::get('/run-migrations', function() {
-         Artisan::call('migrate');
-         return "Tablas creadas con éxito";
-     });
-     ```
-3. **Permisos:** Asegúrate de que las carpetas `placapp_core/storage/` y `placapp_core/bootstrap/cache/` tengan permisos de escritura (normalmente 755 o 775).
+### Fase 5: El Archivo .htaccess y Seguridad
+Asegúrate de que tu archivo `public_html/.htaccess` tenga estas reglas para el manejo correcto de rutas de Laravel y seguridad:
+
+```apache
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Forzar HTTPS si tu hosting tiene SSL
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # Regla base de Laravel
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>
+```
+
+### Fase 6: Variables de Entorno (.env)
+Edita el archivo `/placapp_core/.env` directamente en el Administrador de Archivos:
+- `APP_ENV=production`
+- `APP_DEBUG=false`
+- `APP_URL=https://tudominio.com`
+- `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`: Datos que creaste en tu panel de MySQL.
+
+---
+
+### Fase 7: Base de Datos (phpMyAdmin)
+1. **Local:** Ve a tu phpMyAdmin local, selecciona la DB y haz clic en **Exportar** (Método rápido, formato SQL).
+2. **Servidor:** En cPanel, crea la DB y el usuario, entra a phpMyAdmin, selecciona la nueva DB y haz clic en **Importar**. Sube tu archivo `.sql`.
+
+¡Listo! Con este flujo manual, tu PlacApp Web estará optimizada, segura y funcionando al 100% sin necesidad de tocar una consola en el servidor.
 
 ¡Con esto, tu PlacApp Web estará activa y segura en tu Hosting compartido!
 
