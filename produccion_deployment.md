@@ -1,14 +1,14 @@
 # 🚀 Guía Maestra de Despliegue - PlacApp (raptor.mipos.pro)
 
-Esta guía detalla el proceso para desplegar la nueva versión de **PlacApp Web** en el subdominio `raptor.mipos.pro`, utilizando el **Método del Núcleo Protegido** para máxima seguridad.
+Esta guía detalla el despliegue de **PlacApp Web** en su propia carpeta de subdominio independiente, integrando el núcleo y los recursos públicos en una misma estructura raíz para mayor organización.
 
 ---
 
-## 📋 Fase 1: Preparación Local (Puesta a Punto)
+## 📋 Fase 1: Preparación Local
 
-Antes de subir nada, debemos optimizar el proyecto en tu PC local.
+Antes de subir el proyecto, optimízalo en tu computadora local:
 
-1. **Limpieza y Optimización:**
+1. **Optimización total:**
    ```bash
    php artisan optimize:clear
    composer install --no-dev --optimize-autoloader
@@ -16,76 +16,72 @@ Antes de subir nada, debemos optimizar el proyecto en tu PC local.
    php artisan route:cache
    php artisan view:cache
    ```
-2. **Creación del ZIP:** Crea un archivo `placapp_web.zip` incluyendo los siguientes elementos:
+2. **ZIP de Producción:** Crea un archivo `placapp_web.zip` incluyendo:
    - **✅ INCLUIR:** `app/`, `bootstrap/`, `config/`, `database/`, `lang/`, `public/`, `resources/`, `routes/`, `storage/`, `vendor/`, `.env`, `artisan`, `composer.json`, `composer.lock`.
-   - **❌ OMITIR:** `node_modules/`, `.git/`, `.github/`, `tests/`, `stubs/`, `phpunit.xml`, `vite.config.js`, `package.json`, `.DS_Store`.
+   - **❌ OMITIR:** `node_modules/`, `.git/`, `tests/`, `stubs/`, `phpunit.xml`, `vite.config.js`.
 
 ---
 
 ## 🏢 Fase 2: Configuración en el Servidor (raptor.mipos.pro)
 
-Seguiremos el método de **"Archivos fuera del Directorio Público"**.
+Esta estructura asume que tu subdominio tiene su propia raíz en `/home/mipospro/raptor.mipos.pro/`.
 
-### 1. Limpieza del Subdominio
-Accede a tu Administrador de Archivos y **borra todo** lo que hay dentro de la carpeta:
-`/home/mipospro/public_html/raptor.mipos.pro/`
-*(Esto incluye borrar las carpetas antiguas de app, vendor, etc. que tenías allí expuestas).*
+### 1. Limpieza y Extracción
+- **Borra todo** el contenido actual de la carpeta `/home/mipospro/raptor.mipos.pro/`.
+- Sube y **extrae el ZIP** directamente en esa carpeta raíz.
 
-### 2. Estructura de Carpetas Final
-Subiremos los archivos de forma que queden organizados así:
+### 2. Método de Fusión en Raíz
+Debes mover el contenido de la carpeta `public/` para que la aplicación sea accesible directamente desde el subdominio:
 
-```text
-/home/mipospro/
-├── placapp_core/        <-- (Aquí extraes TODO el ZIP, excepto la carpeta public)
-└── public_html/
-    └── raptor.mipos.pro/ <-- (Aquí mueves solo el CONTENIDO de la carpeta public)
-        ├── css/
-        ├── js/
-        ├── img/
-        ├── .htaccess
-        └── index.php
-```
+1. Entra a la carpeta `public/` recién extraída.
+2. **Mueve todos los archivos** (incluyendo `.htaccess` e `index.php`) a la carpeta principal `raptor.mipos.pro/`.
+3. (Opcional) Borra la carpeta `public/` ya vacía para mayor limpieza.
 
 ### 3. Ajuste de Rutas en index.php
-Edita el archivo `/home/mipospro/public_html/raptor.mipos.pro/index.php` y ajusta estas 3 líneas para que encuentren el núcleo en la carpeta superior:
+Edita e archivo `/home/mipospro/raptor.mipos.pro/index.php` y ajusta estas 3 líneas (ya que ahora todo está al mismo nivel):
 
 ```php
-// 1. Ruta de mantenimiento
-if (file_exists($maintenance = __DIR__.'/../../../placapp_core/storage/framework/maintenance.php')) {
+// 1. Ruta de mantenimiento (Quitar el ../)
+if (file_exists($maintenance = __DIR__.'/storage/framework/maintenance.php')) {
     require $maintenance;
 }
 
-// 2. Autoload de Composer
-require __DIR__.'/../../../placapp_core/vendor/autoload.php';
+// 2. Autoload de Composer (Quitar el ../)
+require __DIR__.'/vendor/autoload.php';
 
-// 3. Inicio de la App
-$app = require_once __DIR__.'/../../../placapp_core/bootstrap/app.php';
+// 3. Inicio de la App (Quitar el ../)
+$app = require_once __DIR__.'/bootstrap/app.php';
 ```
 
 ---
 
-## 🛡️ Fase 3: Configuración de Seguridad (.htaccess)
+## 🛡️ Fase 3: Seguridad y Blindaje (.htaccess)
 
-Copia este contenido exacto en tu archivo `/home/mipospro/public_html/raptor.mipos.pro/.htaccess` para asegurar el flujo de Laravel:
+Para proteger tus archivos sensibles (`.env`, `app/`, `vendor/`) de accesos externos, edita el archivo `/home/mipospro/raptor.mipos.pro/.htaccess` y añade estas reglas al principio:
 
 ```apache
+# ----------------------------------------------------------------------
+# BLINDAJE DE SEGURIDAD (Subdominio Independiente)
+# ----------------------------------------------------------------------
+
+# Bloquear acceso a archivos sensibles (.env, logs, etc)
+<FilesMatch "^\.env|.*\.log|composer\.(json|lock)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Bloquear acceso a carpetas del sistema
+RedirectMatch 404 ^/(app|bootstrap|config|database|lang|resources|routes|storage|tests|vendor)/
+
+# ----------------------------------------------------------------------
+# REGLAS ESTÁNDAR DE LARAVEL
+# ----------------------------------------------------------------------
 <IfModule mod_rewrite.c>
-    <IfModule mod_negotiation.c>
-        Options -MultiViews -Indexes
-    </IfModule>
-
     RewriteEngine On
-
     # Forzar HTTPS
     RewriteCond %{HTTPS} off
     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-    # Redirigir barras finales si no es una carpeta
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_URI} (.+)/$
-    RewriteRule ^ %1 [L,R=301]
-
-    # Enviar peticiones al Front Controller
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
@@ -94,22 +90,10 @@ Copia este contenido exacto en tu archivo `/home/mipospro/public_html/raptor.mip
 
 ---
 
-## ⚙️ Fase 4: Base de Datos y .env
+## ⚙️ Fase 4: Finalización
 
-1. **Variables de Entorno:** Edita `/home/mipospro/placapp_core/.env` con los datos de producción:
-   - `APP_ENV=production`
-   - `APP_DEBUG=false`
-   - `APP_URL=https://raptor.mipos.pro`
-   - Credenciales de la base de datos MySQL.
-2. **Base de Datos:** Importa tu archivo `.sql` mediante el **phpMyAdmin** de cPanel.
-
----
-
-## 🔧 Solución de Problemas
-
-*   **Error 500:** Verifica los permisos de las carpetas `placapp_core/storage` y `placapp_core/bootstrap/cache` (deben ser 755 o 775).
-*   **Imágenes no cargan:** Asegúrate de que el logo esté en `/raptor.mipos.pro/img/Logo_Placapp.png`.
-*   **Sin cambios visuales:** Limpia el caché de tu navegador (Ctrl+Shift+R).
+1. **Variables de Entorno:** Edita `.env` con las credenciales de base de datos de producción y asegúrate de que `APP_DEBUG=false`.
+2. **Base de Datos:** Importa tu base de datos mediante **phpMyAdmin** en cPanel.
 
 ---
 **Última actualización:** Abril 2026 - Versión Nativa Apple.
