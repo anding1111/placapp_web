@@ -52,8 +52,6 @@ Route::middleware(['auth'])->group(function () {
         // Administración de usuarios
         Route::resource('users', UserController::class);
 
-        Route::get('/create', [UserController::class, 'create'])->name('users.create');
-
         // Importar datos
         Route::get('/upload', [PlateController::class, 'showUploadForm'])->name('upload.form');
         Route::post('/upload-excel', [PlateController::class, 'uploadExcel'])->name('upload.excel');
