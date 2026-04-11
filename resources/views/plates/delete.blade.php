@@ -52,17 +52,15 @@
 </div>
 
 <!-- Vista de tabla de placas -->
-<div class="row justify-content-center contTable mt-3" id="plateTableContainer">
+<div class="row justify-content-center contTable mt-3" id="plateTableContainer" style="margin-top: 0px !important; margin-bottom: 80px !important;">
     <div class="col-lg-8 col-md-10 col-sm-12">
         <div class="import-card-table">
-            <div class="table-header-ios">
-                LISTADO DE PLACAS
-            </div>
+            {{-- El título se elimina por redundancia según solicitud del usuario --}}
+
             <div class="dataTable_wrapper">
                 <table class="table" id="dataTables-placas" width="100%">
                     <thead>
                         <tr>
-                            <th>No.</th>
                             <th>Placa</th>
                             <th>Fecha</th>
                             <th style="text-align:center">Acción</th>
@@ -78,21 +76,20 @@
                 </table>
             </div>
             
-            <!-- Modal Eliminación -->
+            <!-- Alerta Nativa de Borrado (iOS Style) -->
             <div class="modal fade" id="null_modal" role="dialog">
-                <div class="modal-dialog">
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <label class="modal-title" style="width: 100%; text-align:center;">BORRAR PLACA</label>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <div class="modal-dialog modal-dialog-centered" style="max-width: 280px; margin: auto;">
+                    <div class="modal-content ios-alert-content">
+                        <div class="ios-alert-header">
+                            <h4 class="ios-alert-title">¿Eliminar Placa?</h4>
+                            <p class="ios-alert-message">Esta acción no se puede deshacer de forma sencilla.</p>
                         </div>
-                        <div class="modal-body">
-                            <!-- El contenido del modal se cargará dinámicamente -->
+                        <div class="modal-body ios-alert-body" style="padding: 10px 15px 20px 15px;">
+                            <!-- El contenido simplificado se inyectará aquí -->
                         </div>
-                        <div class="modal-footer" style="text-align: center;">
-                            <button type="button" id="null-confirm" class="btn btn-default btn-lg" data-dismiss="modal" style="color:#fff;background-color:#33B5E5;">BORRAR</button>
-                            <button type="button" class="btn btn-default btn-lg" data-dismiss="modal" style="color:#fff;background-color:#33B5E5;">SALIR</button>
+                        <div class="ios-alert-actions">
+                            <button type="button" id="null-confirm" class="ios-alert-btn ios-alert-btn-danger" data-dismiss="modal">Eliminar</button>
+                            <button type="button" class="ios-alert-btn ios-alert-btn-cancel" data-dismiss="modal">Cancelar</button>
                         </div>
                     </div>
                 </div>
@@ -113,14 +110,14 @@
         display: flex;
         justify-content: center;
         margin-top: 50px; /* Aumentado para no chocar con el botn Salir en Desktop */
-        margin-bottom: 5px;
+        /* margin-bottom: 5px; */
         z-index: 100;
         position: relative;
     }
 
     @media (max-width: 768px) {
         .mode-switcher-container {
-            margin-top: 55px; /* Ms espacio en móvil para el botón de cerrar sesión */
+            margin-top: 75px; /* Más espacio en móvil para evitar superposición con botones superiores */
         }
     }
 
@@ -129,7 +126,7 @@
         background-color: rgba(255, 255, 255, 0.08);
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
-        padding: 2px;
+        padding: 0px;
         border-radius: 12px;
         width: 100%;
         max-width: 320px;
@@ -177,9 +174,11 @@
         -webkit-backdrop-filter: blur(25px);
         border-radius: 20px;
         border: 1px solid rgba(255, 255, 255, 0.1);
-        padding: 15px;
-        margin-top: 15px;
+        padding: 10px;
+        margin-top: 10px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        display: flex;
+        flex-direction: column;
     }
 
     .table-header-ios {
@@ -193,14 +192,28 @@
     }
 
     /* Estilos para DataTables Internos */
-    .dataTable_wrapper {
-        border: none !important;
+    .dataTables_info {
+        flex: 0 0 auto !important;
+        margin-top: 5px !important; /* Eliminamos el auto para que no se aleje de la tabla */
+        padding-top: 5px !important;
+        padding-bottom: 0 !important;
+        font-size: 11px !important;
+        opacity: 0.7;
+    }
+
+    .dataTables_paginate {
+        flex: 0 0 auto !important;
+        margin-top: 0 !important;
+        padding-top: 0px !important; /* Espaciado mínimo */
+        /* padding-bottom: 5px !important; */
     }
 
     #dataTables-placas {
         border: none !important;
         background: transparent !important;
         margin-top: 10px !important;
+        width: 100% !important;
+        table-layout: fixed !important; /* Fuerza a las columnas a respetar el ancho */
     }
 
     #dataTables-placas thead th {
@@ -210,7 +223,7 @@
         font-size: 11px;
         text-transform: uppercase;
         font-weight: 600;
-        padding: 10px 5px;
+        padding: 12px 5px;
     }
 
     #dataTables-placas tbody tr {
@@ -226,9 +239,23 @@
         border: none !important;
         border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
         color: rgba(255, 255, 255, 0.9) !important;
-        padding: 12px 5px;
+        padding: 14px 5px;
         font-size: 14px;
         vertical-align: middle;
+        word-break: break-word !important; /* Evita que el texto largo empuje la tabla */
+        overflow-wrap: anywhere !important;
+    }
+
+    /* Ajuste de anchos de columna (3 columnas visibles) */
+    #dataTables-placas th:nth-child(1), #dataTables-placas td:nth-child(1) { width: 35%; text-align: left; }  /* Placa */
+    #dataTables-placas th:nth-child(2), #dataTables-placas td:nth-child(2) { width: 50%; }                 /* Fecha */
+    #dataTables-placas th:nth-child(3), #dataTables-placas td:nth-child(3) { width: 15%; text-align: center; } /* Acción */
+
+    @media (max-width: 480px) {
+        #dataTables-placas tbody td {
+            font-size: 13px;
+            padding: 12px 4px;
+        }
     }
 
     /* Buscador DataTables estilo iOS */
@@ -288,7 +315,7 @@
 
     /* NUCLEAR FIX: Eliminación total de cuadros blancos de Bootstrap/DataTables */
     .contTable .pagination {
-        margin: 20px 0 !important;
+        margin: 5px 0 !important; /* Reducido de 20px a 5px para máxima compactación */
         display: flex !important;
         justify-content: center !important;
         border: none !important;
@@ -354,21 +381,101 @@
         display: none !important;
     }
 
-    /* Botón Borrar más estilizado */
-    .btn-small-red {
-        background: rgba(255, 69, 58, 0.15) !important;
-        color: #ff453a !important;
-        border: 1px solid rgba(255, 69, 58, 0.3) !important;
-        border-radius: 8px;
-        padding: 4px 12px;
-        font-size: 12px;
-        font-weight: 600;
-        transition: all 0.2s;
+    /* Acción: Botón Icono iOS Style */
+    .action-btn-ios {
+        background: transparent !important;
+        border: none !important;
+        color: #007aff !important;
+        padding: 5px !important;
+        margin: 0 auto;
+        font-size: 16px;
+        transition: transform 0.2s;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
     }
 
-    .btn-small-red:hover {
-        background: #ff453a !important;
+    .action-btn-ios:active {
+        transform: scale(0.9);
+        background: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .action-btn-ios.delete {
+        color: #ff3b30 !important; /* Rojo iOS */
+        background: rgba(255, 59, 48, 0.1) !important;
+    }
+
+    .action-btn-ios i {
+        background: transparent !important;
+    }
+
+    /* Estilo de Alerta Nativa iOS */
+    .ios-alert-content {
+        background: rgba(30,30,30,0.75) !important;
+        backdrop-filter: blur(25px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+        border: none !important;
+        border-radius: 14px !important;
         color: #fff !important;
+        overflow: hidden !important;
+    }
+
+    .ios-alert-header {
+        padding: 20px 15px 10px 15px;
+        text-align: center;
+    }
+
+    .ios-alert-title {
+        font-size: 17px !important;
+        font-weight: 600 !important;
+        margin: 0 0 5px 0 !important;
+        color: #fff !important;
+    }
+
+    .ios-alert-message {
+        font-size: 13px !important;
+        color: rgba(255, 255, 255, 0.8) !important;
+        margin: 0 !important;
+        line-height: 1.4;
+    }
+
+    .ios-alert-actions {
+        display: flex;
+        flex-direction: column;
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .ios-alert-btn {
+        background: transparent !important;
+        border: none !important;
+        padding: 12px !important;
+        font-size: 17px !important;
+        width: 100%;
+        color: #007aff !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        cursor: pointer;
+        outline: none !important;
+    }
+
+    .ios-alert-btn:last-child {
+        border-bottom: none;
+    }
+
+    .ios-alert-btn-danger {
+        color: #ff3b30 !important;
+        font-weight: 600 !important;
+    }
+
+    .ios-alert-btn-cancel {
+        font-weight: 400 !important;
+    }
+
+    .ios-alert-btn:active {
+        background: rgba(255, 255, 255, 0.1) !important;
     }
 </style>
 @endpush
@@ -383,22 +490,62 @@
     var routePlateFetch = "{{ route('plate.fetch') }}";
     var routePlateNull = "{{ route('plate.null') }}";
 
+    // Registro de paginador personalizado "ios_modern" (V6: Simetría Total y Funcional)
+    $.fn.dataTable.ext.pager.ios_modern = function (page, pages) {
+        var buttons = [];
+        var addBtn = function(b) {
+            if (buttons.indexOf(b) === -1) buttons.push(b);
+        };
+        
+        // 1. INICIO
+        if (page === 0) addBtn(0); else addBtn('first');
+        
+        // 2. CUERPO SECUENCIAL
+        // Si estamos en la primera, forzar visibilidad de la segunda para poder avanzar
+        if (page === 0 && pages > 1) {
+            addBtn(1);
+        }
+        
+        // Elipsis si hay salto desde el inicio
+        if (page > 2) addBtn('ellipsis');
+        
+        // Bloque dinámico de navegación (Anterior, Actual, Siguiente)
+        if (page > 0 && page < pages - 1) {
+            if (page > 1) addBtn(page - 1);
+            addBtn(page);
+            if (page + 1 < pages - 1) addBtn(page + 1);
+        }
+        
+        // Elipsis si hay salto hacia el final
+        if (page < pages - 4) {
+            addBtn('ellipsis');
+        }
+        
+        // 3. FINAL
+        if (pages > 2) {
+            addBtn(pages - 2); // Penúltima (63)
+        }
+        
+        if (page === pages - 1) addBtn(pages - 1); else addBtn('last');
+        
+        return buttons;
+    };
+
     // Configuración personalizada para estilo iOS
     window.datatableOptions = {
         lengthChange: false, // Ocultar "Mostrar X entradas" para menos ruido
-        pageLength: 8, // Menos filas para que la tabla sea más corta y manejable
-        pagingType: "numbers", // Solo números para evitar los botones de texto toscos
+        pageLength: 10, // Menos filas para que la tabla sea más corta y manejable
+        pagingType: "ios_modern", // Usar nuestro nuevo paginador inteligente
         language: {
             search: "_INPUT_",
             searchPlaceholder: "Buscar placa...",
             info: "Placas _START_ a _END_ de _TOTAL_",
             paginate: {
-                previous: "",
-                next: ""
+                first: '<i class="fas fa-step-backward"></i>',
+                last: '<i class="fas fa-step-forward"></i>'
             }
         },
         columns: [
-            { data: 'id', name: 'id' },
             { data: 'plate_name', name: 'plate_name' },
             { data: 'plate_entry_date', name: 'plate_entry_date' },
             { 
@@ -406,7 +553,11 @@
                 orderable: false,
                 className: 'text-center',
                 render: function (data, type, row, meta) {
-                    return '<button class="invoiceInfo btn-small-red" data-id="' + row.id + '">Borrar</button>';
+                    return `
+                        <button class="action-btn-ios delete invoiceInfo" data-id="${row.id}" title="Borrar">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    `;
                 }
             }
         ]
@@ -439,34 +590,20 @@
 
     // Ajusta dinámicamente la altura del contenedor de la tabla en móviles
     // para que se adapte al espacio disponible sin solaparse con la bottom bar
+    // Ajusta el contenedor de la tabla para asegurar que nada se recorte
     function adjustTableContainerHeight() {
         const container = document.getElementById('plateTableContainer');
         if (!container) return;
 
-        // Solo aplica en pantallas pequeñas (≤768px)
-        if (window.innerWidth <= 768) {
-            const bottomBar = document.querySelector('body > div:last-child');
-            const bottomBarHeight = bottomBar ? bottomBar.offsetHeight : 80;
-            const viewportHeight = window.innerHeight;
-            const containerTop = container.getBoundingClientRect().top + window.scrollY;
-            
-            // Altura disponible: viewport - posición del contenedor - altura de bottom bar
-            const availableHeight = viewportHeight - containerTop - bottomBarHeight - 20; // 20px de margen
-            container.style.maxHeight = Math.max(200, availableHeight) + 'px';
-            container.style.overflowY = 'auto';
-        } else {
-            // En pantallas grandes, remover restricción de altura
-            container.style.maxHeight = 'none';
-            container.style.overflowY = 'visible';
-        }
+        // Liberamos la altura para aprovechar el espacio y evitar recortes
+        container.style.maxHeight = 'none';
+        container.style.overflowY = 'visible';
     }
 
     // Ejecutar al cargar la página y cuando se redimensiona la ventana
     document.addEventListener('DOMContentLoaded', adjustTableContainerHeight);
     window.addEventListener('resize', adjustTableContainerHeight);
     window.addEventListener('orientationchange', adjustTableContainerHeight);
-
-    // Carga script_dataTable.js después de definir las variables
 </script>
 <script src="{{ asset('js/script_dataTable.js') }}"></script>
 @endpush

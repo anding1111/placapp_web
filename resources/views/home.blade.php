@@ -21,18 +21,12 @@
 
 <div class="color-selector" style="--blue: #50C4ED; --red: #FC2947; --yellow: #F4E931; --green: #70E000; --pink: #FF96C5; --black: #2b2b28;">
     <div class="color-selector-header">ANTIGÜEDAD</div>
-    <input type="radio" id="red" name="colors" />
-    <label class="colors" for="red">Hoy (Día)</label>
-    <input type="radio" id="green" name="colors" />
-    <label class="colors" for="green">Semana</label>
-    <input type="radio" id="pink" name="colors" />
-    <label class="colors" for="pink">Mes</label>
-    <input type="radio" id="blue" name="colors" />
-    <label class="colors" for="blue">3 Meses</label>
-    <input type="radio" id="yellow" name="colors" />
-    <label class="colors" for="yellow">6 Meses</label>
-    <input type="radio" id="black" name="colors" />
-    <label class="colors" for="black">+6 Meses</label>
+    <div class="color-info-item" data-color="red">Hoy (Día)</div>
+    <div class="color-info-item" data-color="green">Semana</div>
+    <div class="color-info-item" data-color="pink">Mes</div>
+    <div class="color-info-item" data-color="blue">3 Meses</div>
+    <div class="color-info-item" data-color="yellow">6 Meses</div>
+    <div class="color-info-item" data-color="black">+6 Meses</div>
 </div>
 @endsection
 

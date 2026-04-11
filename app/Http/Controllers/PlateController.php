@@ -126,36 +126,17 @@ class PlateController extends Controller
         }
                      
         if (!$plate) {
-            return '<p>No se encontró la placa</p>';
+            return '<p class="text-center" style="color: rgba(255,255,255,0.6);">No se encontró la placa</p>';
         }
         
-        // Construir HTML para el modal
-        $html = '<div class="row" style="font-size:12px; margin-left:10px;">';
-        $html .= '<div class="col-sm-6 invoice-col">';
-        $html .= '<input type="hidden" id="numInvoice" value="'.$plateId.'">';
-        $html .= '</div>';
-        $html .= '</div>';
-        
-        $html .= '<div class="col-sm-12" style="margin-top: 15px;">';
-        $html .= '<table class="table table-hover" border="0" width="100%">';
-        $html .= '<thead>';
-        $html .= '<tr>';
-        $html .= '<th style="width:20%">Placa</th>';
-        $html .= '<th style="width:35%; text-align:right">Entrada</th>';
-        $html .= '<th style="width:20%; text-align:right">Ubicación</th>';
-        $html .= '<th style="width:25%; text-align:right">Detalles</th>';
-        $html .= '</tr>';
-        $html .= '</thead>';
-        $html .= '<tbody style="max-height: 30vh; overflow-y: auto; overflow-x: hidden;">';
-        
-        $html .= '<tr>';
-        $html .= '<td style="width:20%">'.$plate->plate_name.'</td>';
-        $html .= '<td style="text-align:right; width:35%">'.$plate->plate_entry_date.'</td>';
-        $html .= '<td style="text-align:right; width:20%">'.$plate->plate_location.'</td>';
-        $html .= '<td style="text-align:right; width:25%">'.$plate->plate_detail.'</td>';
-        $html .= '</tr>';
-        
-        $html .= '</tbody></table></div>';
+        // Estilo simplificado para Alerta Nativa iOS
+        $html = '<input type="hidden" id="numInvoice" value="'.$plateId.'">';
+        $html .= '<p class="text-center" style="font-size: 16px; font-weight: 500; color: #fff; margin-bottom: 5px;">';
+        $html .= 'PLACA: <strong style="color: #007aff;">'.$plate->plate_name.'</strong>';
+        $html .= '</p>';
+        $html .= '<p class="text-center" style="font-size: 12px; color: rgba(255,255,255,0.5);">';
+        $html .= 'Entrada: '.$plate->plate_entry_date;
+        $html .= '</p>';
         
         return $html;
     }

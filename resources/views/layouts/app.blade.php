@@ -64,6 +64,64 @@
                 margin-top: 8px;
             }
         }
+
+        /* --- NUEVO CONTENEDOR TRASLÚCIDO iOS 17 (GLOBAL) --- */
+        .dataTables_processing {
+            position: fixed !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            width: 90px !important;
+            height: 90px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            background: rgba(44, 44, 46, 0.7) !important; /* Estilo Dark iOS */
+            backdrop-filter: blur(15px) !important;
+            -webkit-backdrop-filter: blur(15px) !important;
+            border-radius: 20px !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            color: transparent !important; /* Ocultar texto "Procesando" por defecto */
+            z-index: 10000 !important;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6) !important;
+            display: none; /* Dejar que DataTables lo controle */
+        }
+
+        /* Solo aplicar flex cuando la tabla decida mostrarlo inline */
+        div.dataTables_processing[style*="block"] {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        /* --- ESTABILIZADOR FLEXBOX NATIVO (GLOBAL) --- */
+        /* Hacemos que el wrapper de DataTable sea un contenedor flexible vertical */
+        .dataTables_wrapper {
+            display: flex !important;
+            flex-direction: column !important;
+            height: 100% !important;
+        }
+
+        /* La zona de scroll ocupa todo el espacio disponible */
+        .dataTables_scroll {
+            flex: 1 1 auto !important;
+            display: flex !important;
+            flex-direction: column !important;
+            min-height: 0 !important; /* Permite que colapse si es necesario */
+        }
+
+        .dataTables_scrollBody {
+            flex: 1 1 auto !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+        }
+
+        /* Los controles (info y paginación) se anclan al fondo */
+        .dataTables_info, .dataTables_paginate {
+            flex: 0 0 auto !important;
+            margin-top: auto !important;
+            /* padding-top: 2px !important; */
+        }
+        /* -------------------------------------- */
+        /* ---------------------------------------------------- */
     </style>
 </head>
 

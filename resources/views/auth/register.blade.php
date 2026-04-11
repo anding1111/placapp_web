@@ -32,6 +32,8 @@
             background-size: cover;
         }
         
+        
+        
         .text-danger {
             color: #dc3545!important;
         }
@@ -46,18 +48,12 @@
         
         .back-to-login {
             text-align: center;
-            margin-top: 15px;
+            margin-top: 25px;
         }
         
-        .back-to-login a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 0.9em;
-            transition: color 0.3s;
-        }
-        
-        .back-to-login a:hover {
-            color: #00b6df;
+        .back-to-login p {
+            color: rgba(255, 255, 255, 0.5) !important;
+            font-size: 14px;
         }
 
         .modern-modal {
@@ -132,14 +128,16 @@
                     <input type="email" name="email" class="auth-input" placeholder="Correo electrónico" autocomplete="email" required value="{{ old('email') }}">
                 </div>
 
-                <div class="auth-item login icon-input">
+                <div class="auth-item login icon-input password-container">
                     <i class="fas fa-key input-icon"></i>
-                    <input type="password" name="password" class="auth-input" placeholder="Contraseña" autocomplete="new-password" required>
+                    <input type="password" name="password" id="register-password" class="auth-input" placeholder="Contraseña" autocomplete="new-password" required>
+                    <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('register-password', this)"></i>
                 </div>
 
-                <div class="auth-item login icon-input">
+                <div class="auth-item login icon-input password-container">
                     <i class="fas fa-key input-icon"></i>
-                    <input type="password" name="password_confirmation" class="auth-input" placeholder="Confirmar contraseña" autocomplete="new-password" required>
+                    <input type="password" name="password_confirmation" id="register-password-confirm" class="auth-input" placeholder="Confirmar contraseña" autocomplete="new-password" required>
+                    <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('register-password-confirm', this)"></i>
                 </div>
 
                 <div class="auth-button-panel login">
@@ -147,8 +145,11 @@
                 </div>
             </form>
             
-            <div class="back-to-login">
-                <p>¿Ya tienes una cuenta? <a href="{{ route('login') }}">Iniciar sesión</a></p>
+            <div class="back-to-login" style="text-align: center; margin-top: 25px;">
+                <p style="color: rgba(255,255,255,0.5); font-size: 14px; font-weight: 400;">
+                    ¿Ya tienes una cuenta? 
+                    <a href="{{ route('login') }}" class="auth-aux-link" style="display: inline; margin-left: 5px;">Iniciar sesión</a>
+                </p>
             </div>
         </div>
     </div>
@@ -159,6 +160,22 @@
     <!-- Bootstrap 4 JS -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <script>
+        // Función para mostrar/ocultar contraseña
+        function togglePasswordVisibility(inputId, iconElement) {
+            const input = document.getElementById(inputId);
+            if (!input || !iconElement) return;
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                iconElement.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                iconElement.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+    </script>
 </body>
 
 </html>

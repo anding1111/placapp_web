@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<a href="{{ route('online.users') }}" class="ios-nav-btn-online" title="Usuarios en Línea">
+<a href="{{ route('online.users') }}" class="ios-nav-btn-online">
     <i class="fas fa-users"></i>
     <span class="ios-online-dot"></span>
 </a>
@@ -148,33 +148,67 @@
         padding: 20px 15px;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
         width: 100%;
-        min-height: 500px; /* Altura mnima garantizada */
+        display: flex;
+        flex-direction: column;
+        min-height: 600px; /* Altura estable en Desktop */
     }
 
-    /* Botón Navegación Online Style iOS */
+    /* Botón Navegación Online Style iOS - Simétrico al Logout */
     .ios-nav-btn-online {
         position: fixed;
-        top: 25px;
+        top: 20px;
         left: 20px;
-        width: 42px;
-        height: 42px;
+        width: 44px;
+        height: 44px;
         background: rgba(255, 255, 255, 0.1);
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.15);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         color: #fff;
         font-size: 18px;
-        z-index: 999;
+        z-index: 9999;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         text-decoration: none !important;
     }
 
+    .ios-nav-btn-online:hover {
+        transform: scale(1.1);
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.3);
+        color: #fff !important; /* Forzar blanco para evitar azul heredado */
+    }
+
+    /* Tooltip sutil estilo iOS */
+    .ios-nav-btn-online::after {
+        content: 'Usuarios en Línea';
+        position: absolute;
+        left: 55px;
+        white-space: nowrap;
+        background: rgba(44, 44, 46, 0.8);
+        backdrop-filter: blur(15px);
+        padding: 5px 12px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 500;
+        color: #fff;
+        opacity: 0;
+        transform: translateX(-10px);
+        transition: all 0.3s ease;
+        pointer-events: none;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .ios-nav-btn-online:hover::after {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
     .ios-nav-btn-online:active {
-        transform: scale(0.9);
+        transform: scale(0.92);
         background: rgba(255, 255, 255, 0.2);
     }
 
@@ -188,6 +222,12 @@
         border: 2px solid #1c1c1e;
         border-radius: 50%;
         box-shadow: 0 0 10px rgba(52, 199, 89, 0.5);
+        transition: all 0.3s ease;
+    }
+
+    .ios-nav-btn-online:hover .ios-online-dot {
+        box-shadow: 0 0 15px rgba(52, 199, 89, 1);
+        transform: scale(1.1);
     }
 
     @media (max-width: 768px) {
@@ -298,7 +338,7 @@
 
     /* NUCLEAR FIX: Paginación Circular con Especificidad Extrema */
     .contTable .pagination {
-        margin: 20px 0 10px 0 !important;
+        /* margin: 20px 0 10px 0 !important; */
         display: flex !important;
         justify-content: center !important;
         gap: 8px !important;
@@ -336,8 +376,8 @@
 
     /* Botón Flotante iOS Style */
     .floatingButtonWrap {
-        bottom: 110px !important; /* Subido para evitar colisin con bottombar */
-        right: 25px !important;
+        bottom: 95px !important; /* Ajustado para estar más cerca de la barra sin colisionar */
+        right: 20px !important;
         transition: all 0.3s ease !important;
     }
 
@@ -348,38 +388,39 @@
     }
 
     .floatingButton {
-        width: 60px !important;
-        height: 60px !important;
-        background: linear-gradient(135deg, #007aff 0%, #004fb1 100%) !important;
+        width: 54px !important;
+        height: 54px !important;
+        background: linear-gradient(135deg, #007aff 0%, #0056b3 100%) !important;
         border-radius: 50% !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        box-shadow: 0 8px 25px rgba(0, 122, 255, 0.5) !important;
-        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3) !important;
+        transition: all 0.2s ease-in-out !important;
         border: none !important;
         position: relative !important;
         padding: 0 !important;
         overflow: visible !important;
-        text-decoration: none !important; /* Elimina la lnea de subrayado */
-    }
-
-    .floatingButton:hover, 
-    .floatingButton:focus, 
-    .floatingButton:active {
         text-decoration: none !important;
-        outline: none !important;
-        color: white !important;
+    }
+
+    .floatingButton:hover {
+        filter: brightness(1.1);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4) !important;
     }
 
     .floatingButton:active {
-        transform: scale(0.9) !important;
+        transform: scale(0.92) !important;
+        filter: brightness(0.9);
+        transition: all 0.1s ease !important;
     }
 
     .floatingButton .material-icons {
         margin: 0 !important;
-        font-size: 30px !important;
+        font-size: 26px !important; /* Icono más elegante */
         color: white !important;
+        font-weight: normal !important;
     }
 
     /* iOS Sheet Modal Styles */
@@ -680,7 +721,7 @@
     // Configuración personalizada del datatable de usuarios
     window.usersTableOptions = {
         lengthChange: false,
-        pageLength: 12, // Aumentado a 12 para llenar ms espacio
+        pageLength: 10,
         pagingType: "numbers",
         autoWidth: false, // Permitir que el CSS controle los anchos
         scrollY: '550px', // Mucho ms altura de scroll

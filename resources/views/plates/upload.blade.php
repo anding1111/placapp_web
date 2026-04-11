@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="row d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="row d-flex justify-content-center align-items-center" style="min-height: 80vh; margin-top: 40px;">
         <div class="import-card">
             <div class="avatar">
                 <img src="{{ asset('img/Logo_Placapp.png') }}" alt="Avatar">
@@ -24,5 +24,5 @@
 @endsection
 
 @push('scripts')
-<script src="{{ asset('js/script.js') }}"></script>
+{{-- script.js se carga de forma global --}}
 @endpush

@@ -58,6 +58,15 @@ $(function () {
             if (window.datatableOptions.columns) {
                 options.columns = window.datatableOptions.columns;
             }
+            if (window.datatableOptions.pagingType) {
+                options.pagingType = window.datatableOptions.pagingType;
+            }
+            if (window.datatableOptions.pageLength) {
+                options.pageLength = window.datatableOptions.pageLength;
+            }
+            if (window.datatableOptions.lengthChange !== undefined) {
+                options.lengthChange = window.datatableOptions.lengthChange;
+            }
         }
 
         platesTbl = $('#dataTables-placas').DataTable(options);

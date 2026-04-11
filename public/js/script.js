@@ -37,6 +37,11 @@ function openURL(page) {
 var navItems = document.querySelectorAll(".mobile-bottom-nav__item");
 navItems.forEach(function (e, i) {
     e.addEventListener("click", function () {
+        // Validación nativa: Si ya estamos en esta vista, no hacer nada
+        if (this.classList.contains("mobile-bottom-nav__item--active")) {
+            return;
+        }
+
         navItems.forEach(function (e2) {
             e2.classList.remove("mobile-bottom-nav__item--active");
         });
@@ -286,7 +291,9 @@ class OnlineTracker {
 
     // Método robusto para obtener el token CSRF actualizado
     getCsrfToken() {
-        return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+        return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || 
+               (typeof csrfToken !== 'undefined' ? csrfToken : '') || 
+               $('meta[name="csrf-token"]').attr('content') || '';
     }
 
     start() {
@@ -404,4 +411,17 @@ function funcHide() {
 
 function funcToggle() {
     $(".cont").fadeToggle("slow");
+}
+
+function togglePasswordVisibility(inputId, iconElement) {
+    const input = document.getElementById(inputId);
+    if (!input || !iconElement) return;
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        iconElement.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+        input.type = 'password';
+        iconElement.classList.replace('fa-eye-slash', 'fa-eye');
+    }
 }

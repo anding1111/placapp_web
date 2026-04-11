@@ -177,8 +177,6 @@
             border-radius: 5px;
             padding: 8px;
             width: 100%;
-            font-weight: bold;
-            text-transform: uppercase;
             font-size: 13px;
             cursor: pointer;
             transition: background-color 0.3s;
@@ -263,18 +261,7 @@
             margin: 10px 0 6px;
         }
         
-        /* Subtle 'Crear Cuenta' link */
-        .create-account-btn {
-            color: #00b6df !important;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.2s ease;
-            border-bottom: 1px solid transparent;
-        }
-        
-        .create-account-btn:hover {
-            border-bottom: 1px solid #00b6df;
-        }
+        /* Estilos de enlaces auxiliares movidos a style.css (.auth-aux-link) */
     </style>
 </head>
 
@@ -291,12 +278,15 @@
                 @csrf
                 <h3 style="text-align: center;">Iniciar Sesión</h3>
 
-                <div class="auth-item login">
+                <div class="auth-item login icon-input">
+                    <i class="fas fa-user input-icon"></i>
                     <input type="text" name="username" class="auth-input" placeholder="Usuario" autocomplete="username" autocorrect="off" autocapitalize="none" spellcheck="false" required value="{{ old('username') }}">
                 </div>
 
-                <div class="auth-item login">
-                    <input type="password" name="password" class="auth-input" placeholder="Contraseña" autocomplete="current-password" autocorrect="off" autocapitalize="none" spellcheck="false">
+                <div class="auth-item login icon-input password-container">
+                    <i class="fas fa-key input-icon"></i>
+                    <input type="password" name="password" id="login-password" class="auth-input" placeholder="Contraseña" autocomplete="current-password" autocorrect="off" autocapitalize="none" spellcheck="false" required>
+                    <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('login-password', this)"></i>
                     <input type="hidden" name="uuid" id="uuid-field">
                 </div>
 
@@ -316,8 +306,7 @@
                         {{ session('error') }}
                     </div>
                 @endif
-                <p><a href="#">¿Has olvidado tu contraseña?</a></p>
-                <p style="margin-top: 15px;"><a href="{{ route('register') }}" class="create-account-btn"><i class="fas fa-user-plus" style="margin-right: 6px;"></i>Crear Cuenta</a></p>
+                <p style="margin-top: 10px;"><a href="{{ route('register') }}" class="auth-aux-link"><i class="fas fa-user-plus" style="margin-right: 6px;"></i>Crear Cuenta</a></p>
             </div>
         </div>
     </div>
@@ -664,6 +653,20 @@
         // Recargar la página para reintentar
         function retryLogin() {
             window.location.reload();
+        }
+
+        // Función para mostrar/ocultar contraseña
+        function togglePasswordVisibility(inputId, iconElement) {
+            const input = document.getElementById(inputId);
+            if (!input || !iconElement) return;
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                iconElement.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                iconElement.classList.replace('fa-eye-slash', 'fa-eye');
+            }
         }
     </script>
 </body>

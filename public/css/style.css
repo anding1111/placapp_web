@@ -33,11 +33,15 @@ body {
   width: 90%;
   max-width: 320px;
   height: max-content;
-  background: #1c1c1e; /* Color gris profundo tipo iOS */
+  background: #1c1c1e;
+  /* Color gris profundo tipo iOS */
   padding: 25px 30px;
-  border-radius: 16px; /* Curvatura nativa HIG */
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.6); /* Profundidad suave sin bordes neÃ³n */
-  box-sizing: border-box; /* CorrecciÃ³n de mÃ¡rgenes */
+  border-radius: 16px;
+  /* Curvatura nativa HIG */
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
+  /* Profundidad suave sin bordes neÃ³n */
+  box-sizing: border-box;
+  /* CorrecciÃ³n de mÃ¡rgenes */
 }
 
 .form-wrapper-table {
@@ -116,13 +120,16 @@ h3 {
   height: 50px;
   padding: 10px 15px;
   box-sizing: border-box;
-  border: 1px solid #48484a; /* Gris metÃ¡lico HIG */
-  background: #2c2c2e; /* Fondo oscuro tÃ¡ctico */
+  border: 1px solid #48484a;
+  /* Gris metÃ¡lico HIG */
+  background: #2c2c2e;
+  /* Fondo oscuro tÃ¡ctico */
   color: #ffffff;
   border-radius: 12px;
   text-align: center;
   font-size: 20px;
-  font-weight: 500; /* Reducido para elegancia */
+  font-weight: 500;
+  /* Reducido para elegancia */
   text-transform: uppercase;
   outline: none;
   transition: all 0.3s ease;
@@ -135,19 +142,17 @@ h3 {
   box-shadow: 0 0 10px rgba(0, 182, 223, 0.2);
 }
 
-.login input[type='password'] {
-  background: transparent url("../img/pass.jpg") no-repeat;
-  background-position: 10px 50%;
-}
-
-.login input[type='text'] {
-  background: transparent url("../img/user.jpg") no-repeat;
-  background-position: 10px 50%;
-
-}
-
-.login input[type='plate'] {
-  background-position: 10px 50%;
+/* Eliminados iconos de fondo antiguos para evitar duplicados con FontAwesome */
+.form-item input {
+  border: none;
+  background: transparent;
+  color: #fff;
+  margin-top: 11px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1.2em;
+  height: 49px;
+  padding: 0 16px;
+  width: 100%;
 }
 
 .form-item input:focus {
@@ -306,7 +311,8 @@ h3 {
 /* MÃ¡s de 6 meses */
 .boton_over_six_month {
   background-color: #1d1e2c;
-  border: 1.5px solid rgba(255, 255, 255, 0.2) !important; /* Borde visible en fondo oscuro */
+  border: 1.5px solid rgba(255, 255, 255, 0.2) !important;
+  /* Borde visible en fondo oscuro */
   color: #ffffff !important;
 }
 
@@ -352,9 +358,10 @@ h3 {
 }
 
 .blink_text {
-  font-size: 1.3em; 
-  margin-top: 20px; 
-  font-weight: 700; /* Suavizado de 800 a 700 */
+  font-size: 1.3em;
+  margin-top: 20px;
+  font-weight: 700;
+  /* Suavizado de 800 a 700 */
   color: #ffffff;
   letter-spacing: 0.5px;
   text-align: center;
@@ -436,63 +443,56 @@ h3 {
   right: 0 !important;
   z-index: 1000;
   display: flex;
-  height: 65px;
-  background-color: rgba(28, 28, 30, 0.75) !important; /* MÃ¡s transparente para el vidrio */
-  backdrop-filter: blur(25px); /* Efecto iOS 17 profundo */
+  height: calc(65px + env(safe-area-inset-bottom));
+  background-color: rgba(28, 28, 30, 0.85) !important; /* Un poco más sólido para contraste */
+  backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
-  padding: 10px 0 calc(10px + env(safe-area-inset-bottom)) 0;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
+  justify-content: space-around;
+  align-items: flex-start;
+  padding: 0;
 }
 
 .mobile-bottom-nav__item {
-  flex-grow: 1;
-  text-align: center;
-  font-size: 11px;
-  font-weight: 500;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+  flex: 1;
+  height: 65px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: rgba(255, 255, 255, 0.45); /* Color de Ã­tem inactivo segÃºn HIG */
-  cursor: pointer;
+  text-decoration: none !important;
+  color: rgba(255, 255, 255, 0.85); /* Gris muy claro para máxima legibilidad */
   transition: all 0.2s ease;
-}
-
-.mobile-bottom-nav__item i {
-  font-size: 20px;
-  margin-bottom: 4px;
-}
-
-.mobile-bottom-nav__item--active {
-  color: #00b6df; /* Color activo vibrante */
-}
-
-.mobile-bottom-nav__item--active i {
-  /* Efecto de 'relleno' visual para el activo */
-  filter: drop-shadow(0 0 5px rgba(0, 182, 223, 0.3));
-}
-
-.mobile-bottom-nav__item {
-  flex-grow: 1;
-  text-align: center;
-  font-size: 12px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  color: #fff;
   cursor: pointer;
-  border: #00b6df;
-}
-
-.mobile-bottom-nav__item--active {
-  color: #00b6df;
 }
 
 .mobile-bottom-nav__item-content {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Icono sobre texto */
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.mobile-bottom-nav__item i {
+  font-size: 24px;
+  margin-bottom: 2px;
+  display: block;
+}
+
+.mobile-bottom-nav__item {
+  font-size: 11px;
+  font-weight: 500;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.mobile-bottom-nav__item--active {
+  color: #00b6df !important;
+}
+
+.mobile-bottom-nav__item--active i {
+  filter: drop-shadow(0 0 5px rgba(0, 182, 223, 0.4));
 }
 
 .mobile-bottom-nav__item a {
@@ -534,9 +534,11 @@ h3 {
   background-color: rgba(28, 28, 30, 0.75);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
-  border-radius: 0 16px 16px 0; /* Radio de mini-card */
+  border-radius: 0 16px 16px 0;
+  /* Radio de mini-card */
   max-width: fit-content;
-  padding: 10px 12px 10px 8px; /* MÃ¡s compacto */
+  padding: 8px 10px 8px 6px;
+  /* Ultra compacto */
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-left: none;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
@@ -544,11 +546,14 @@ h3 {
 }
 
 .color-selector-header {
-  font-size: 8px; /* Reducido para mayor elegancia */
-  font-weight: 500; /* Suavizado el peso */
-  color: rgba(255, 255, 255, 0.35); /* Más sutil */
+  font-size: 8px;
+  /* Reducido para mayor elegancia */
+  font-weight: 500;
+  /* Suavizado el peso */
+  color: rgba(255, 255, 255, 0.35);
+  /* Más sutil */
   letter-spacing: 0.6px;
-  margin-bottom: 4px;
+  margin-bottom: 1px;
   margin-left: 2px;
   text-transform: uppercase;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
@@ -582,89 +587,65 @@ h3 {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     padding: 6px 4px !important;
     gap: 8px;
-    background-color: rgba(28, 28, 30, 0.85); /* Un poco mÃ¡s sÃ³lida para contraste sobre el fondo ruidoso */
-  }
-
-  .color-selector label.colors {
-    margin: 0 !important;
-    font-size: 10px !important; /* Miniatura extrema para que todo quepa en una fila */
-  }
-
-  .color-selector .colors:before {
-    width: 10px;
-    height: 10px;
-    margin-right: 4px;
-  }
-
-  .color-selector-header {
-    display: none; /* Ocultar para ahorrar espacio vertical cuando el teclado estÃ¡ abierto */
+    background-color: rgba(28, 28, 30, 0.85);
+    /* Un poco mÃ¡s sÃ³lida para contraste sobre el fondo ruidoso */
   }
 }
 
-[type=radio] {
-  display: none;
-}
-
-
-
-label.colors {
+/* Los items ahora son puramente informativos */
+.color-info-item {
   display: inline-flex;
   align-items: center;
-  margin: 3px 0; /* MÃ¡s denso */
+  margin: 1px 0;
   padding: 1px 2px;
-  cursor: pointer;
-  font-size: 11px; /* Mini fuente extra clara */
-  font-weight: 500; /* Suavizado */
+  cursor: default !important; /* Forzar puntero normal para evitar rechazo de Apple */
+  pointer-events: none; /* Desactivar interactividad totalmente */
+  font-size: 11px;
+  font-weight: 500;
   color: rgba(255, 255, 255, 0.85);
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
   letter-spacing: -0.1px;
-  transition: opacity 0.2s;
 }
 
-label.colors:active {
-  opacity: 0.6;
-}
-
-.colors:before {
+.color-info-item:before {
   display: inline-block;
   content: "";
   background: var(--c-bg);
-  width: 12px; /* Mini escala */
+  width: 12px;
   height: 12px;
   border-radius: 50%;
   margin-right: 8px;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 1px 2px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(0, 0, 0, 0.2);
+  pointer-events: none; /* Asegurar que el círculo tampoco sea interactivo */
 }
 
-[type=radio]:checked + label.colors:before {
-  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.8), 0 0 8px var(--c-bg);
-  border: 1.5px solid rgba(0, 0, 0, 0.4);
-}
 
-label.colors[for=blue] {
+
+.color-info-item[data-color=blue] {
   --c-bg: var(--blue);
 }
 
-label.colors[for=red] {
+.color-info-item[data-color=red] {
   --c-bg: var(--red);
 }
 
-label.colors[for=yellow] {
+.color-info-item[data-color=yellow] {
   --c-bg: var(--yellow);
 }
 
-label.colors[for=green] {
+.color-info-item[data-color=green] {
   --c-bg: var(--green);
 }
 
-label.colors[for=pink] {
+.color-info-item[data-color=pink] {
   --c-bg: var(--pink);
 }
 
-label.colors[for=black] {
+.color-info-item[data-color=black] {
   --c-bg: var(--black);
 }
+
 
 
 /*/// Import Excel to SQL///*/
@@ -986,49 +967,64 @@ label.colors[for=black] {
 
 .close-container {
   position: fixed;
-  top: 15px;
-  right: 15px;
+  top: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  transition: all 0.3s ease;
   z-index: 9999;
   text-decoration: none;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 6px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.close-container:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #fff !important; /* Forzar blanco para evitar azul heredado */
 }
 
 .close-container i {
-  font-size: 1.6rem;
-  color: rgba(255, 255, 255, 0.7);
-  transition: all 0.3s ease;
-}
-
-.close-container:hover i, .close-container:hover label {
-  color: #FC2947;
-  text-shadow: 0 0 8px rgba(252, 41, 71, 0.6);
+  font-size: 18px;
+  color: #fff;
+  margin: 0 !important;
 }
 
 .close-container label {
-  font-family: 'Nunito', sans-serif;
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.7);
+  display: none !important;
+}
+
+/* Tooltip sutil estilo iOS para Salir */
+.close-container::after {
+  content: 'Cerrar Sesión';
+  position: absolute;
+  right: 55px;
+  white-space: nowrap;
+  background: rgba(44, 44, 46, 0.8);
+  backdrop-filter: blur(15px);
+  padding: 5px 12px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #fff;
+  opacity: 0;
+  transform: translateX(10px);
   transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  cursor: pointer;
-  margin: 0;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.close-container:hover label {
-  color: #FC2947;
-}
-
-@media (max-width: 768px) {
-  .close-container label {
-    display: none !important;
-  }
+.close-container:hover::after {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 /* Online button */
@@ -1302,7 +1298,8 @@ button {
 .email {
   /* background: #DEDBDF;
 	border-radius: 16px; */
-  height: 38px; /* Tocado mÃ¡s tÃ¡ctil */
+  height: 38px;
+  /* Tocado mÃ¡s tÃ¡ctil */
   overflow: hidden;
   position: relative;
   width: 86px;
@@ -1313,7 +1310,8 @@ button {
     border-radius 300ms cubic-bezier(0.4, 0.0, 0.2, 1);
   margin: 3px;
   font-weight: 900;
-  border-radius: 10px; /* Bordes menos cuadrados para las pastillas base */
+  border-radius: 10px;
+  /* Bordes menos cuadrados para las pastillas base */
   color: #000000;
 }
 
@@ -1388,10 +1386,11 @@ button {
   width: 180px;
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   z-index: 2;
   position: relative;
-  display: flex; /* Nuevo para control de X */
+  display: flex;
+  /* Nuevo para control de X */
   justify-content: space-between;
   align-items: center;
 }
@@ -1408,9 +1407,11 @@ button {
 .name-large {
   color: #efd8ef;
   font-size: 17px;
-  font-weight: 700; /* Suavizado de 800 */
+  font-weight: 700;
+  /* Suavizado de 800 */
   line-height: 50px;
-  margin-left: 15px; /* MÃ¡s espacio al borde izquierdo */
+  margin-left: 15px;
+  /* MÃ¡s espacio al borde izquierdo */
 }
 
 .x-touch {
@@ -1418,10 +1419,12 @@ button {
   align-self: center;
   cursor: pointer;
   display: flex;
-  height: 100%; /* Ocupar todo el alto de la cabecera */
+  height: 100%;
+  /* Ocupar todo el alto de la cabecera */
   justify-content: center;
   width: 45px;
-  margin-right: 5px; /* SeparaciÃ³n del borde derecho */
+  margin-right: 5px;
+  /* SeparaciÃ³n del borde derecho */
 }
 
 .x {
@@ -1453,8 +1456,10 @@ button {
 }
 
 .bottom {
-  background: #2c2c2e; /* Mismo fondo tÃ¡ctico oscuro que los inputs */
-  color: #ffffff; /* Texto claro para contraste estricto */
+  background: #2c2c2e;
+  /* Mismo fondo tÃ¡ctico oscuro que los inputs */
+  color: #ffffff;
+  /* Texto claro para contraste estricto */
   font-size: 13px;
   height: auto;
   min-height: 120px;
@@ -1505,11 +1510,16 @@ button {
 }
 
 .email.expand {
-  border-radius: 16px; /* Native iOS alert radius */
-  box-shadow: 0 24px 45px rgba(0, 0, 0, 0.9); /* Profundidad masiva suave */
-  border: 1px solid rgba(255, 255, 255, 0.15); /* Borde estricto iOS */
-  background-color: #242426; /* Fondo base unificador */
-  overflow: hidden; /* Mantiene la estÃ©tica de pÃ­ldora intacta */
+  border-radius: 16px;
+  /* Native iOS alert radius */
+  box-shadow: 0 24px 45px rgba(0, 0, 0, 0.9);
+  /* Profundidad masiva suave */
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  /* Borde estricto iOS */
+  background-color: #242426;
+  /* Fondo base unificador */
+  overflow: hidden;
+  /* Mantiene la estÃ©tica de pÃ­ldora intacta */
   height: auto;
   min-height: 170px;
   width: 180px;
@@ -1527,7 +1537,8 @@ button {
 
 .expand .to {
   opacity: 1;
-  position: relative; /* CRÃTICO: Permite empujar la altura del padre auto */
+  position: relative;
+  /* CRÃTICO: Permite empujar la altura del padre auto */
   transition: opacity 200ms 100ms cubic-bezier(0.0, 0.0, 0.2, 1);
 }
 
@@ -1645,8 +1656,8 @@ button {
   /* Simplify and style pagination buttons with icons */
   .dataTables_wrapper .dataTables_paginate {
     text-align: center;
-    margin-top: 8px !important;
-    margin-bottom: 8px !important;
+    /* margin-top: 8px !important; */
+    /* margin-bottom: 8px !important; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -2028,11 +2039,81 @@ button {
   color: rgba(255, 255, 255, 0.4);
 }
 
+/* Fix para Autocompletado (Chromium/Safari) */
+.auth-input:-webkit-autofill,
+.auth-input:-webkit-autofill:hover, 
+.auth-input:-webkit-autofill:focus, 
+.auth-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px rgba(44, 44, 46, 1) inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  transition: background-color 5000s ease-in-out 0s;
+  caret-color: white;
+}
+
 .auth-input:focus {
   outline: none;
   border: 1px solid rgba(80, 196, 237, 0.6);
   background: rgba(255, 255, 255, 0.1);
   box-shadow: 0 0 12px rgba(80, 196, 237, 0.2);
+}
+
+/* Password Toggle Style */
+.password-container {
+  position: relative;
+  width: 100%;
+}
+
+.password-container .auth-input {
+  padding-right: 48px !important; /* Espacio para el icono nativo */
+}
+
+.password-toggle {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  padding: 8px;
+  z-index: 10;
+  transition: all 0.2s ease;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 7px; /* Compensación para alineación perfecta con el input */
+}
+
+.password-toggle:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.password-toggle:active {
+  transform: translateY(-50%) scale(0.9);
+  opacity: 0.7;
+}
+
+/* Iconos de Input Alineados */
+.icon-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 16px;
+  pointer-events: none;
+  z-index: 5;
+  margin-top: 7px; /* Compensación para el margin-top del input */
+}
+
+.icon-input .auth-input {
+  padding-left: 50px !important;
 }
 
 .auth-button-panel {
@@ -2043,47 +2124,72 @@ button {
 
 .auth-button {
   -webkit-appearance: none;
-  background: linear-gradient(135deg, #50C4ED, #3A9BC4);
+  display: block !important;
+  width: 100% !important;
+  background: linear-gradient(135deg, #007AFF, #0051AF); /* Azul iOS Premium */
   border: none;
-  color: #ffffff;
+  color: #ffffff !important;
   cursor: pointer;
   height: 52px;
+  max-width: 100% !important;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 1.1em;
-  font-weight: 700;
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  transition: all 0.3s ease;
-  width: 100%;
+  font-weight: 600;
   border-radius: 14px;
-  box-shadow: 0 4px 15px rgba(80, 196, 237, 0.4);
-  margin-top: 10px;
-}
-
-.auth-button:active {
-  transform: scale(0.96);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-top: 15px;
+  box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+  text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
 .auth-button:hover {
   filter: brightness(1.1);
-  box-shadow: 0 6px 20px rgba(80, 196, 237, 0.6);
+  box-shadow: 0 6px 20px rgba(0, 122, 255, 0.5);
+}
+
+.auth-button:active {
+  transform: scale(0.98);
+}
+
+/* Enlaces Auxiliares Estilo iOS 17 */
+.auth-aux-link {
+  color: #007AFF !important; /* Azul nativo iOS */
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 0;
+}
+
+.auth-aux-link:hover {
+  color: #5AC8FA !important; /* Resaltado al hacer hover */
+  border-bottom-color: #5AC8FA;
+}
+
+.auth-aux-link i {
+  font-size: 16px;
 }
 
 .auth-avatar {
-    border: 2px solid rgba(255,255,255,0.15); 
-    border-radius: 50%; 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5); 
-    display: inline-block; 
-    padding: 2px;
-    margin-bottom: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  display: inline-block;
+  padding: 2px;
+  margin-bottom: 10px;
 }
 
 .auth-avatar img {
-    border-radius: 50%;
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
 }
 
 /*//////////////////////// Vista Importación (iOS 17 Native) ////////////////////////*/
@@ -2101,7 +2207,8 @@ button {
   flex-direction: column;
   align-items: center;
   z-index: 10;
-  margin: 10px auto; /* Centrado base */
+  margin: 10px auto;
+  /* Centrado base */
 }
 
 @media (max-width: 768px) {
@@ -2110,24 +2217,27 @@ button {
     max-width: 340px;
     margin-top: 20px;
   }
-  
+
   .import-zone {
     height: 180px !important;
   }
-  
+
   .import-help-text {
     margin-top: 60px !important;
     font-size: 14px !important;
   }
-  
+
   .import-help-text:after {
     font-size: 32px !important;
     top: 25% !important;
   }
 }
+
 .import-card-delete {
-  background-color: rgba(45, 25, 30, 0.75); /* Tinte rojizo sutil para borrado */
+  background-color: rgba(45, 25, 30, 0.75);
+  /* Tinte rojizo sutil para borrado */
 }
+
 .import-form {
   width: 100%;
   height: auto;
@@ -2136,6 +2246,7 @@ button {
   align-items: center;
   margin-top: 20px;
 }
+
 .import-zone {
   width: 100%;
   height: 220px;
@@ -2149,10 +2260,12 @@ button {
   transition: all 0.3s ease;
   margin-bottom: 25px;
 }
+
 .import-zone:hover {
   border-color: #00b6df;
   background: rgba(255, 255, 255, 0.03);
 }
+
 .import-help-text {
   color: rgba(255, 255, 255, 0.85);
   font-size: 16px;
@@ -2160,8 +2273,10 @@ button {
   margin-top: 80px;
   pointer-events: none;
 }
+
 .import-help-text:after {
-  content: '\f067'; /* Icono Plus */
+  content: '\f067';
+  /* Icono Plus */
   font-family: 'FontAwesome';
   font-size: 40px;
   color: #00b6df;
@@ -2170,6 +2285,7 @@ button {
   left: 50%;
   transform: translateX(-50%);
 }
+
 .import-input {
   position: absolute;
   top: 0;
@@ -2180,9 +2296,11 @@ button {
   cursor: pointer;
   z-index: 5;
 }
+
 .import-actions {
   width: 100%;
 }
+
 .import-btn {
   width: 100%;
   height: 50px;
@@ -2196,10 +2314,12 @@ button {
   cursor: pointer;
   transition: all 0.2s ease;
 }
+
 .import-btn:active {
   transform: scale(0.98);
   opacity: 0.9;
 }
+
 .import-btn-delete {
   background: linear-gradient(135deg, #ff453a 0%, #c12b23 100%);
   box-shadow: 0 4px 15px rgba(255, 69, 58, 0.3);

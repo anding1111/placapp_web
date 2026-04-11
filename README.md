@@ -52,44 +52,60 @@ Para ejecutar este proyecto en tu entorno de desarrollo local, sigue estos pasos
 
 ---
 
-## 🌐 Guía de Despliegue en Hosting Compartido (cPanel sin acceso a SSH)
+## 🌐 Guía de Despliegue en Hosting Compartido (FTP / Admin. de Archivos)
 
-Si no dispones de acceso a la terminal (SSH) en tu servidor cPanel, sigue estas instrucciones paso a paso:
+Si planeas desplegar en un hosting tradicional (cPanel, Plesk, etc.) donde no tienes acceso a terminal (SSH), sigue estos pasos detallados para asegurar que Laravel funcione correctamente:
 
-### Fase 1: Preparación en Local
-Dado que no puedes ejecutar comandos en el servidor, debes preparar todo tu proyecto en local antes de subirlo:
+### Fase 1: Preparación local
+Como no se pueden ejecutar comandos en el servidor, debemos preparar el "corazón" de la app en tu PC:
+1. **Limpieza de Caché:** Antes de subir, limpia las rutas y configuraciones locales para evitar errores de rutas absolutas:
+   - Elimina manualmente los archivos dentro de `storage/framework/views/` (pero no la carpeta).
+   - Elimina los archivos dentro de `storage/framework/sessions/`.
+   - Elimina `bootstrap/cache/config.php` y `bootstrap/cache/routes.php` si existen.
+2. **Dependencias:** Asegúrate de que la carpeta `vendor` esté completa (después de un `composer install`). No necesitas subir la carpeta `node_modules`.
+3. **Recursos Estáticos:** El proyecto ya cuenta con sus estilos y JS listos en la carpeta `public/`, por lo que **no es necesario ejecutar npm install o npm build**.
+4. **Comprimir:** Comprime todo el contenido en un archivo `.zip` (incluyendo archivos ocultos como `.env`).
 
-1. En tu máquina local, asegúrate de que el archivo `.env` está configurado para producción:
+### Fase 2: Subida y Estructura de Carpetas (Método Seguro)
+Para evitar que el código fuente sea accesible desde la web, te recomiendo esta estructura:
+
+1. **Subida:** Sube tu `.zip` a la raíz de tu hosting (un nivel ARRIBA de la carpeta `public_html` o `www`).
+2. **Extracción:** Extrae el contenido en una carpeta dedicada (ejemplo: `/hosting/usuario/placapp_core/`).
+3. **Punto de Entrada:** 
+   - Entra a la carpeta `placapp_core/public/` y **mueve todos sus archivos** (incluyendo el `.htaccess` e `index.php`) a la carpeta pública del servidor (`public_html/`).
+   - Ahora tu código fuente está seguro en `placapp_core/` y solo el punto de entrada es público en `public_html/`.
+
+### Fase 3: Ajuste Crítico de Rutas (El paso más importante)
+Como moviste el archivo `index.php`, debes decirle dónde encontrar el núcleo de Laravel. Edita `public_html/index.php` y ajusta las siguientes líneas:
+
+```php
+// Cambia estas líneas (aproximadamente líneas 34 y 47)
+require __DIR__.'/../vendor/autoload.php';
+$app = require_once __DIR__.'/../bootstrap/app.php';
+
+// Por estas (ajustando al nombre de tu carpeta):
+require __DIR__.'/../placapp_core/vendor/autoload.php';
+$app = require_once __DIR__.'/../placapp_core/bootstrap/app.php';
+```
+
+### Fase 4: Configuración final y Base de Datos
+1. **Archivo .env:** Edita el archivo `.env` dentro de `placapp_core/`:
    - `APP_ENV=production`
-   - `APP_DEBUG=false`
-   - Configura las credenciales correctas de base de datos que crearás en cPanel.
-2. Ejecuta la compilación de recursos estáticos en tu máquina local:
-   ```bash
-   npm run build
-   ```
-3. Comprime todo el contenido de la carpeta de tu proyecto (incluyendo todos los archivos ocultos como `.env`) en un archivo **`.zip`**.
+   - `APP_DEBUG=false` (¡Crítico para seguridad!)
+   - `APP_URL=https://tudominio.com`
+   - Ingresa las credenciales de la base de datos que creaste en tu panel (cPanel MySQL).
+2. **Migración sin SSH:** Como no puedes ejecutar `artisan migrate`:
+   - **Opción phpMyAdmin:** Exporta tu base de datos local como archivo `.sql` e impórtala usando phpMyAdmin en tu hosting.
+   - **Opción de Emergencia:** Puedes crear temporalmente una ruta en `web.php` para ejecutar las migraciones:
+     ```php
+     Route::get('/run-migrations', function() {
+         Artisan::call('migrate');
+         return "Tablas creadas con éxito";
+     });
+     ```
+3. **Permisos:** Asegúrate de que las carpetas `placapp_core/storage/` y `placapp_core/bootstrap/cache/` tengan permisos de escritura (normalmente 755 o 775).
 
-### Fase 2: Subida y Configuración en cPanel
-1. Accede a **cPanel > Administrador de Archivos (File Manager)**.
-2. Sube el archivo `.zip` al directorio de tu servidor, un nivel por encima de `public_html` (ej. `/home/tu_usuario/placapp_web/`).
-3. Extrae el archivo `.zip` en ese directorio.
-4. Entra a la carpeta `/home/tu_usuario/placapp_web/public/`, **selecciona todos los archivos** y muévelos adentro de la carpeta `/home/tu_usuario/public_html/` (la carpeta pública del servidor).
-5. Como moviste el archivo `index.php`, debes actualizar sus rutas correspondientes. Edita `/home/tu_usuario/public_html/index.php`:
-   - Cambia `require __DIR__.'/../storage/framework/maintenance.php';`
-     a `require __DIR__.'/../placapp_web/storage/framework/maintenance.php';`
-   - Cambia `require __DIR__.'/../vendor/autoload.php';`
-     a `require __DIR__.'/../placapp_web/vendor/autoload.php';`
-   - Cambia `$app = require_once __DIR__.'/../bootstrap/app.php';`
-     a `$app = require_once __DIR__.'/../placapp_web/bootstrap/app.php';`
-
-### Fase 3: Creación de la Base de Datos y Optimización
-1. En tu panel de control, dirígete a **cPanel > Bases de Datos MySQL**.
-   - Haz clic en **Crear nueva base de datos**.
-   - Haz clic en **Crear usuario** (y guarda la contraseña de forma segura).
-   - Añade el usuario a la base de datos para darle **Todos los privilegios**.
-   - Anota el nombre de la base de datos y usuario (ej. `tu_usuario_placapp_db`) y actualízalos en tu archivo `.env`.
-2. Como no puedes ejecutar `php artisan migrate`, entra en tu base de datos local usando un programa como phpMyAdmin (o DBeaver), exporta las tablas (archivo `.sql`) e **infíltralas/impórtalas** directamente en la base de datos recién creada usando phpMyAdmin de cPanel.
-3. (Opcional) Crea un script cron en cPanel si la aplicación maneja tareas en segundo plano.
+¡Con esto, tu PlacApp Web estará activa y segura en tu Hosting compartido!
 
 ---
 
