@@ -125,7 +125,7 @@
     </style>
 </head>
 
-<body>
+<body class="{{ Request::routeIs('home') ? 'is-home' : '' }}">
     <div class="close-container">
         <i class="fas fa-sign-out-alt"></i>
         <label>Salir</label>

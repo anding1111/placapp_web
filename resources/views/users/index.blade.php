@@ -18,7 +18,7 @@
                             <th>ID.</th>
                             <th>Usuario</th>
                             <th>Nombre</th>
-                            <th>Perfil</th>
+                            <th style="text-align:center">Rol</th>
                             <th style="text-align:center">Acción</th>
                         </tr>
                     </thead>
@@ -145,12 +145,12 @@
         -webkit-backdrop-filter: blur(25px);
         border-radius: 20px;
         border: 1px solid rgba(255, 255, 255, 0.1);
-        padding: 20px 15px;
+        padding: 20px 15px 12px 15px; /* Reducción de padding inferior */
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
         width: 100%;
         display: flex;
         flex-direction: column;
-        min-height: 600px; /* Altura estable en Desktop */
+        min-height: 650px; /* Altura expandida para ver más registros */
     }
 
     /* Botón Navegación Online Style iOS - Simétrico al Logout */
@@ -236,8 +236,8 @@
             align-items: flex-start; /* Empezar desde arriba en mvil */
         }
         .import-card-table {
-            padding: 15px 8px;
-            min-height: 65vh; /* Ms alta en mvil */
+            padding: 15px 4px; /* Reducción de margen lateral para ganar ancho */
+            min-height: 65vh;
         }
     }
 
@@ -247,17 +247,24 @@
         font-size: 11px;
         font-weight: 700;
         letter-spacing: 1.2px;
-        margin-bottom: 20px;
+        margin-bottom: 5px;
         text-transform: uppercase;
     }
 
-    /* Rediseño de Tabla */
+    /* Rediseño de Tabla - Blindado Total */
+    .dataTables_scroll,
+    .dataTables_scrollHead,
+    .dataTables_scrollHeadInner,
+    .dataTables_scrollBody,
+    .dataTables_scrollHeadInner table,
+    .dataTables_scrollBody table,
     #dataTables-users {
-        border: none !important;
-        background: transparent !important;
         width: 100% !important;
         margin: 0 !important;
-        table-layout: fixed !important; /* Fuerza a las columnas a respetar el ancho del contenedor */
+        table-layout: fixed !important;
+        border: none !important;
+        background: transparent !important;
+        box-sizing: border-box !important;
     }
 
     #dataTables-users thead th {
@@ -267,36 +274,43 @@
         font-size: 11px;
         text-transform: uppercase;
         font-weight: 600;
-        padding: 12px 10px;
+        padding: 12px 4px; /* Reducido al mínimo */
+        box-sizing: border-box !important;
+    }
+
+    /* Forzar centrado en los encabezados del Scroll de DataTables */
+    .dataTables_scrollHead th:nth-child(3), 
+    .dataTables_scrollHead th:nth-child(4) {
+        text-align: center !important;
     }
 
     #dataTables-users tbody td {
         border: none !important;
         border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
         color: rgba(255, 255, 255, 0.9) !important;
-        padding: 14px 10px;
+        padding: 14px 4px; /* Reducido al mínimo */
         font-size: 14px;
         vertical-align: middle;
         background: transparent !important;
-        word-break: break-word !important; /* Fuerza el salto de lnea en palabras largas */
-        overflow-wrap: anywhere !important; /* Proteccin extra para desbordamiento */
+        word-break: break-all !important; /* Fuerza la rotura de emails largos */
+        overflow-wrap: anywhere !important;
+        box-sizing: border-box !important;
     }
 
-    /* Ajuste de anchos de columna (ID está oculto, por lo que nth-child(1) es Usuario) */
-    #dataTables-users th:nth-child(1), #dataTables-users td:nth-child(1) { width: 42%; } /* Usuario */
-    #dataTables-users th:nth-child(2), #dataTables-users td:nth-child(2) { width: 33%; } /* Nombre */
-    #dataTables-users th:nth-child(3), #dataTables-users td:nth-child(3) { width: 15%; } /* Perfil */
-    #dataTables-users th:nth-child(4), #dataTables-users td:nth-child(4) { width: 10%; } /* Acciones */
+    /* Ajuste de anchos de columna (ID está oculto) */
+    #dataTables-users th:nth-child(1), #dataTables-users td:nth-child(1) { width: 30%; text-align: left; word-break: break-all !important; } /* Usuario */
+    #dataTables-users th:nth-child(2), #dataTables-users td:nth-child(2) { width: 48%; text-align: left; } /* Nombre */
+    #dataTables-users th:nth-child(3), #dataTables-users td:nth-child(3) { width: 7%; text-align: center; } /* Rol */
+    #dataTables-users th:nth-child(4), #dataTables-users td:nth-child(4) { width: 15%; text-align: center; } /* Acciones */
 
     @media (max-width: 480px) {
         #dataTables-users tbody td {
-            font-size: 13px; /* Un poco más pequeño en móviles muy estrechos */
-            padding: 12px 6px;
+            font-size: 13px;
         }
-        #dataTables-users th:nth-child(1), #dataTables-users td:nth-child(1) { width: 38%; }
-        #dataTables-users th:nth-child(2), #dataTables-users td:nth-child(2) { width: 32%; }
-        #dataTables-users th:nth-child(3), #dataTables-users td:nth-child(3) { width: 18%; }
-        #dataTables-users th:nth-child(4), #dataTables-users td:nth-child(4) { width: 12%; }
+        #dataTables-users th:nth-child(1), #dataTables-users td:nth-child(1) { width: 30%; }
+        #dataTables-users th:nth-child(2), #dataTables-users td:nth-child(2) { width: 40%; }
+        #dataTables-users th:nth-child(3), #dataTables-users td:nth-child(3) { width: 12%; }
+        #dataTables-users th:nth-child(4), #dataTables-users td:nth-child(4) { width: 18%; }
     }
 
     /* Buscador iOS Style */
@@ -336,13 +350,116 @@
         font-size: 14px;
     }
 
-    /* NUCLEAR FIX: Paginación Circular con Especificidad Extrema */
-    .contTable .pagination {
-        /* margin: 20px 0 10px 0 !important; */
+    /* Info de tabla compacta (Placas 1 a 10...) */
+    .dataTables_wrapper .dataTables_info {
+        color: rgba(255, 255, 255, 0.4) !important;
+        text-align: center !important;
+        width: 100% !important;
+        margin-top: 5px !important; /* Pegado a la tabla */
+        margin-bottom: 5px !important;
+        padding: 0 !important;
+    }
+
+    /* RESET NUCLEAR: Eliminar cualquier rastro de diseño base o Bootstrap */
+    .contTable .pagination,
+    .contTable .page-item,
+    .contTable .page-link,
+    .dataTables_wrapper .dataTables_paginate {
+        background: transparent !important;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* PAGINACIÓN CÁPSULA DETALLADA: Diseño de 3 Bloques (Indestructible) */
+    .dataTables_wrapper .dataTables_paginate {
         display: flex !important;
         justify-content: center !important;
-        gap: 8px !important;
+        align-items: center !important;
+        gap: 15px !important;
+        padding-bottom: 5px !important; /* Compactado */
+    }
+
+    /* 1. BOTONES AZULES (Independientes) */
+    .dataTables_wrapper .dataTables_paginate .paginate_button.previous,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.next,
+    .contTable .page-item.previous .page-link,
+    .contTable .page-item.next .page-link {
+        background: #007aff !important; /* Azul iOS */
+        border-radius: 50% !important;
+        width: 46px !important;
+        height: 46px !important;
+        min-width: 46px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        color: #fff !important;
+        cursor: pointer !important;
+        box-shadow: 0 4px 15px rgba(0, 122, 255, 0.4) !important;
+        transition: all 0.3s ease !important;
+        font-size: 0 !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.previous::before,
+    .contTable .page-item.previous .page-link::before { content: '\f053'; font-family: 'FontAwesome'; font-size: 16px !important; }
+    .dataTables_wrapper .dataTables_paginate .paginate_button.next::before,
+    .contTable .page-item.next .page-link::before { content: '\f054'; font-family: 'FontAwesome'; font-size: 16px !important; }
+
+    /* 2. LA CÁPSULA (Píldora Central) */
+    .dataTables_wrapper .dataTables_paginate span,
+    .contTable .pagination {
+        background: rgba(255, 255, 255, 0.08) !important;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 30px !important;
+        padding: 6px 18px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+    }
+
+    /* Estilo de los Números dentro de la Cápsula (Elásticos para legibilidad) */
+    .dataTables_wrapper .dataTables_paginate span .paginate_button,
+    .contTable .pagination .page-item .page-link {
+        color: rgba(255, 255, 255, 0.5) !important;
+        background: transparent !important;
         border: none !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        width: auto !important; /* Ancho automático */
+        min-width: 36px !important; /* Base circular */
+        height: 36px !important;
+        padding: 0 10px !important; /* Aire a los lados de los números */
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 18px !important; /* Forma de píldora pequeña */
+        transition: all 0.2s ease !important;
+    }
+
+    /* Página Actual dentro de la Cápsula (Sin sombras ni bordes) */
+    .dataTables_wrapper .dataTables_paginate span .paginate_button.current,
+    .contTable .pagination .page-item.active .page-link {
+        background: rgba(255, 255, 255, 0.15) !important;
+        color: #fff !important;
+        font-weight: 700 !important;
+        box-shadow: none !important; /* Eliminar brillo azul */
+        border: none !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .ellipsis {
+        color: rgba(255, 255, 255, 0.3) !important;
+        padding: 0 6px !important;
+    }
+
+    /* 3. OCULTAR EXTRAS */
+    .dataTables_wrapper .dataTables_paginate .paginate_button.first,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.last,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+        display: none !important;
     }
 
     .contTable .page-item, 
@@ -440,9 +557,9 @@
 
     .user-sheet {
         position: fixed;
-        bottom: -100%;
+        bottom: 0; /* Anclado a la base física */
         left: 50%;
-        transform: translateX(-50%);
+        transform: translateX(-50%) translateY(100%); /* Oculto relativo a sí mismo */
         width: 100%;
         max-width: 500px;
         background: rgba(44, 44, 46, 0.95);
@@ -450,13 +567,13 @@
         -webkit-backdrop-filter: blur(30px);
         border-radius: 25px 25px 0 0;
         z-index: 10001;
-        transition: bottom 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+        transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
         padding: 20px;
         box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
     }
 
     .user-sheet.show {
-        bottom: 0;
+        transform: translateX(-50%) translateY(0);
     }
 
     .user-sheet.show + .user-sheet-overlay, 
@@ -722,16 +839,16 @@
     window.usersTableOptions = {
         lengthChange: false,
         pageLength: 10,
-        pagingType: "numbers",
-        autoWidth: false, // Permitir que el CSS controle los anchos
-        scrollY: '550px', // Mucho ms altura de scroll
+        pagingType: "simple_numbers", // Sincronizado con Placas para ver 6+ números
+        autoWidth: false,
+        scrollY: '650px', // Aumentado para ver más usuarios
         language: {
             search: "_INPUT_",
             searchPlaceholder: "Buscar usuario...",
             info: "Usuarios _START_ a _END_ de _TOTAL_",
             paginate: {
-                previous: "",
-                next: ""
+                previous: "", // Icono inyectado vía CSS
+                next: ""     // Icono inyectado vía CSS
             }
         },
         ajax: {
@@ -745,9 +862,20 @@
         },
         columns: [
             { data: 'id', name: 'id', visible: false },
-            { data: 'username', name: 'username' },
-            { data: 'name', name: 'name' },
-            { data: 'role', name: 'role' },
+            { data: 'username', name: 'username', className: 'align-middle' },
+            { data: 'name', name: 'name', className: 'align-middle' },
+            { 
+                data: 'role', 
+                name: 'role',
+                className: 'text-center align-middle',
+                render: function(data, type, row) {
+                    let roleStr = (data || '').toLowerCase();
+                    if (roleStr.includes('admin')) {
+                        return '<span style="font-weight: 700; color: #007aff;">A</span>';
+                    }
+                    return '<span style="font-weight: 500; opacity: 0.8;">U</span>';
+                }
+            },
             { 
                 data: 'action', 
                 name: 'action', 

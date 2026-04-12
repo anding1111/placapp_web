@@ -51,9 +51,9 @@
     </div>
 </div>
 
-<!-- Vista de tabla de placas -->
-<div class="row justify-content-center contTable mt-3" id="plateTableContainer" style="margin-top: 0px !important; margin-bottom: 80px !important;">
-    <div class="col-lg-8 col-md-10 col-sm-12">
+<!-- Vista de tabla de placas (Liberación Vertical) -->
+<div class="row justify-content-center contTable mt-3" id="plateTableContainer" style="margin-top: 0px !important; margin-bottom: 80px !important; display: flex; align-items: stretch;">
+    <div class="col-lg-8 col-md-10 col-sm-12 d-flex flex-column">
         <div class="import-card-table">
             {{-- El título se elimina por redundancia según solicitud del usuario --}}
 
@@ -63,7 +63,7 @@
                         <tr>
                             <th>Placa</th>
                             <th>Fecha</th>
-                            <th style="text-align:center">Acción</th>
+                            <th style="text-align:center !important">Acción</th>
                         </tr>
                     </thead>
                 </table>
@@ -174,11 +174,12 @@
         -webkit-backdrop-filter: blur(25px);
         border-radius: 20px;
         border: 1px solid rgba(255, 255, 255, 0.1);
-        padding: 10px;
+        padding: 10px 10px 5px 10px; /* Reducción de padding inferior */
         margin-top: 10px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         display: flex;
         flex-direction: column;
+        flex: 1; /* Ocupar todo el espacio del padre liberado */
     }
 
     .table-header-ios {
@@ -194,26 +195,34 @@
     /* Estilos para DataTables Internos */
     .dataTables_info {
         flex: 0 0 auto !important;
-        margin-top: 5px !important; /* Eliminamos el auto para que no se aleje de la tabla */
+        margin-top: 5px !important; 
         padding-top: 5px !important;
         padding-bottom: 0 !important;
         font-size: 11px !important;
         opacity: 0.7;
+        text-align: center !important;
     }
 
     .dataTables_paginate {
         flex: 0 0 auto !important;
-        margin-top: 0 !important;
-        padding-top: 0px !important; /* Espaciado mínimo */
-        /* padding-bottom: 5px !important; */
+        margin-top: 8px !important; /* Compactado */
+        padding-top: 0px !important;
+        padding-bottom: 5px !important; /* Compactado */
     }
 
-    #dataTables-placas {
+    .dataTables_wrapper .dataTable thead th,
+    .dataTables_wrapper .dataTable tbody td {
+        box-sizing: border-box !important;
+    }
+
+    #dataTables-placas,
+    .dataTables_scrollHead table,
+    .dataTables_scrollBody table {
         border: none !important;
         background: transparent !important;
         margin-top: 10px !important;
         width: 100% !important;
-        table-layout: fixed !important; /* Fuerza a las columnas a respetar el ancho */
+        table-layout: fixed !important; /* Forzar alineación de columnas */
     }
 
     #dataTables-placas thead th {
@@ -248,8 +257,8 @@
 
     /* Ajuste de anchos de columna (3 columnas visibles) */
     #dataTables-placas th:nth-child(1), #dataTables-placas td:nth-child(1) { width: 35%; text-align: left; }  /* Placa */
-    #dataTables-placas th:nth-child(2), #dataTables-placas td:nth-child(2) { width: 50%; }                 /* Fecha */
-    #dataTables-placas th:nth-child(3), #dataTables-placas td:nth-child(3) { width: 15%; text-align: center; } /* Acción */
+    #dataTables-placas th:nth-child(2), #dataTables-placas td:nth-child(2) { width: 45%; text-align: left; }  /* Fecha */
+    #dataTables-placas th:nth-child(3), #dataTables-placas td:nth-child(3) { width: 20%; text-align: center !important; padding-right: 5px !important; } /* Acción Centrada */
 
     @media (max-width: 480px) {
         #dataTables-placas tbody td {
@@ -313,71 +322,108 @@
         border-radius: 10px;
     }
 
-    /* NUCLEAR FIX: Eliminación total de cuadros blancos de Bootstrap/DataTables */
-    .contTable .pagination {
-        margin: 5px 0 !important; /* Reducido de 20px a 5px para máxima compactación */
-        display: flex !important;
-        justify-content: center !important;
-        border: none !important;
-        gap: 8px !important;
-    }
-
+    /* RESET NUCLEAR: Eliminar rastro de Bootstrap (Cuadros blancos/cuadrados) */
+    .contTable .pagination,
     .contTable .page-item,
-    .contTable .paginate_button {
+    .contTable .page-link,
+    .dataTables_wrapper .dataTables_paginate {
         background: transparent !important;
         border: none !important;
-        margin: 0 !important;
+        outline: none !important;
+        box-shadow: none !important;
         padding: 0 !important;
+        margin: 0 !important;
     }
 
-    .contTable .page-link,
-    .contTable .paginate_button a {
-        background: rgba(255, 255, 255, 0.08) !important;
-        background-color: rgba(255, 255, 255, 0.08) !important;
-        border: none !important;
-        color: rgba(255, 255, 255, 0.6) !important;
-        width: 34px !important;
-        height: 34px !important;
+    /* PAGINACIÓN CÁPSULA DETALLADA: Diseño de 3 Bloques */
+    .dataTables_wrapper .dataTables_paginate {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 15px !important;
+        padding-bottom: 5px !important; /* Compactado */
+    }
+
+    /* 1. BOTONES AZULES (Independientes) */
+    .dataTables_wrapper .dataTables_paginate .paginate_button.previous,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.next,
+    .contTable .page-item.previous .page-link,
+    .contTable .page-item.next .page-link {
+        background: #007aff !important; /* Azul iOS */
+        border-radius: 50% !important;
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        border-radius: 50% !important; /* Círculos perfectos estilo iOS */
-        font-size: 13px !important;
-        font-weight: 500 !important;
-        transition: all 0.3s ease !important;
-        margin: 0 !important;
-        box-shadow: none !important;
-    }
-
-    .contTable .page-item.active .page-link,
-    .contTable .paginate_button.current {
-        background: #007aff !important;
-        background-color: #007aff !important;
         color: #fff !important;
-        font-weight: 700 !important;
-        box-shadow: 0 4px 12px rgba(0, 122, 255, 0.4) !important;
-        transform: scale(1.1);
+        cursor: pointer !important;
+        box-shadow: 0 4px 15px rgba(0, 122, 255, 0.4) !important;
+        transition: all 0.3s ease !important;
+        font-size: 0 !important; /* Ocultar texto nativo */
     }
 
-    .contTable .page-item:hover .page-link:not(.active),
-    .contTable .paginate_button:hover:not(.current) {
+    .dataTables_wrapper .dataTables_paginate .paginate_button.previous::before,
+    .contTable .page-item.previous .page-link::before { content: '\f053'; font-family: 'FontAwesome'; font-size: 16px !important; }
+    .dataTables_wrapper .dataTables_paginate .paginate_button.next::before,
+    .contTable .page-item.next .page-link::before { content: '\f054'; font-family: 'FontAwesome'; font-size: 16px !important; }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover:not(.disabled),
+    .contTable .page-link:hover { transform: scale(1.08); color: #fff !important; }
+
+    /* 2. LA CÁPSULA (Píldora Central) */
+    .dataTables_wrapper .dataTables_paginate span,
+    .contTable .pagination {
+        background: rgba(255, 255, 255, 0.08) !important;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 30px !important;
+        padding: 5px 15px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 5px !important;
+    }
+
+    /* Estilo de los Números dentro de la Cápsula (Elásticos para legibilidad) */
+    .dataTables_wrapper .dataTables_paginate span .paginate_button,
+    .contTable .pagination .page-item .page-link {
+        color: rgba(255, 255, 255, 0.5) !important;
+        background: transparent !important;
+        border: none !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        width: auto !important; /* Ancho automático para números grandes como 7058 */
+        min-width: 36px !important; 
+        height: 36px !important;
+        padding: 0 10px !important; /* Espacio lateral para que el número respire */
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 18px !important;
+        transition: all 0.2s ease !important;
+    }
+
+    /* Página Actual: Resaltado sutil dentro de la píldora (Sin sombras) */
+    .dataTables_wrapper .dataTables_paginate span .paginate_button.current,
+    .contTable .pagination .page-item.active .page-link {
         background: rgba(255, 255, 255, 0.15) !important;
         color: #fff !important;
+        font-weight: 700 !important;
+        box-shadow: none !important;
+        border: none !important;
     }
 
-    .contTable .page-item.disabled .page-link,
-    .contTable .paginate_button.disabled {
-        background: transparent !important;
-        color: rgba(255, 255, 255, 0.1) !important;
-        opacity: 0.3;
-        pointer-events: none;
+    .dataTables_wrapper .dataTables_paginate .ellipsis {
+        color: rgba(255, 255, 255, 0.3) !important;
+        padding: 0 5px !important;
     }
 
-    /* Ocultar botones de Anterior/Siguiente de texto para un look minimalista */
-    .contTable .page-item.previous, 
-    .contTable .page-item.next,
-    .contTable .paginate_button.previous,
-    .contTable .paginate_button.next {
+    /* 3. OCULTAR EXTRAS */
+    .dataTables_wrapper .dataTables_paginate .paginate_button.first,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.last,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
         display: none !important;
     }
 
@@ -490,59 +536,21 @@
     var routePlateFetch = "{{ route('plate.fetch') }}";
     var routePlateNull = "{{ route('plate.null') }}";
 
-    // Registro de paginador personalizado "ios_modern" (V6: Simetría Total y Funcional)
-    $.fn.dataTable.ext.pager.ios_modern = function (page, pages) {
-        var buttons = [];
-        var addBtn = function(b) {
-            if (buttons.indexOf(b) === -1) buttons.push(b);
-        };
-        
-        // 1. INICIO
-        if (page === 0) addBtn(0); else addBtn('first');
-        
-        // 2. CUERPO SECUENCIAL
-        // Si estamos en la primera, forzar visibilidad de la segunda para poder avanzar
-        if (page === 0 && pages > 1) {
-            addBtn(1);
-        }
-        
-        // Elipsis si hay salto desde el inicio
-        if (page > 2) addBtn('ellipsis');
-        
-        // Bloque dinámico de navegación (Anterior, Actual, Siguiente)
-        if (page > 0 && page < pages - 1) {
-            if (page > 1) addBtn(page - 1);
-            addBtn(page);
-            if (page + 1 < pages - 1) addBtn(page + 1);
-        }
-        
-        // Elipsis si hay salto hacia el final
-        if (page < pages - 4) {
-            addBtn('ellipsis');
-        }
-        
-        // 3. FINAL
-        if (pages > 2) {
-            addBtn(pages - 2); // Penúltima (63)
-        }
-        
-        if (page === pages - 1) addBtn(pages - 1); else addBtn('last');
-        
-        return buttons;
-    };
-
-    // Configuración personalizada para estilo iOS
+    // Configuración personalizada para estilo iOS (Unificada con Usuarios)
     window.datatableOptions = {
-        lengthChange: false, // Ocultar "Mostrar X entradas" para menos ruido
-        pageLength: 10, // Menos filas para que la tabla sea más corta y manejable
-        pagingType: "ios_modern", // Usar nuestro nuevo paginador inteligente
+        lengthChange: false,
+        autoWidth: false, // Desactivar auto-cálculo para usar solo nuestro CSS
+        pageLength: 20, // Aumentado a 20 para llenar los 750px de altura
+        pagingType: "simple_numbers",
+        scrollY: "700px", // Expandido proporcionalmente a la tarjeta
+        scrollCollapse: true,
         language: {
             search: "_INPUT_",
             searchPlaceholder: "Buscar placa...",
             info: "Placas _START_ a _END_ de _TOTAL_",
             paginate: {
-                first: '<i class="fas fa-step-backward"></i>',
-                last: '<i class="fas fa-step-forward"></i>'
+                previous: "", 
+                next: ""
             }
         },
         columns: [

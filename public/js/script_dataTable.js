@@ -67,6 +67,12 @@ $(function () {
             if (window.datatableOptions.lengthChange !== undefined) {
                 options.lengthChange = window.datatableOptions.lengthChange;
             }
+            if (window.datatableOptions.scrollY) {
+                options.scrollY = window.datatableOptions.scrollY;
+            }
+            if (window.datatableOptions.scrollCollapse !== undefined) {
+                options.scrollCollapse = window.datatableOptions.scrollCollapse;
+            }
         }
 
         platesTbl = $('#dataTables-placas').DataTable(options);
@@ -180,6 +186,18 @@ $(function () {
             }
             if (window.usersTableOptions.columns) {
                 options.columns = window.usersTableOptions.columns;
+            }
+            if (window.usersTableOptions.pagingType) {
+                options.pagingType = window.usersTableOptions.pagingType;
+            }
+            if (window.usersTableOptions.scrollY) {
+                options.scrollY = window.usersTableOptions.scrollY;
+            }
+            if (window.usersTableOptions.scrollCollapse !== undefined) {
+                options.scrollCollapse = window.usersTableOptions.scrollCollapse;
+            }
+            if (window.usersTableOptions.pageLength) {
+                options.pageLength = window.usersTableOptions.pageLength;
             }
         }
 

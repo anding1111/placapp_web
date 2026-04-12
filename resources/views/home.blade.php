@@ -9,7 +9,14 @@
         <h2 style="color:white;" class="blink_text">
             BUSCAR PLACA
         </h2>
-        <input type="plate" id="search_textBox" autofocus="autofocus" />
+        <div class="search-input-wrapper">
+            <input type="plate" id="search_textBox" autofocus="autofocus" />
+            <div id="ios_loader" class="ios-loader" style="display:none;">
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+            </div>
+        </div>
         <div class="text-white mt-2" style="font-size: 0.7em; opacity: 0.6; letter-spacing: 1px; font-weight: 300;">INGRESE 3 PRIMERAS LETRAS</div>
         <div style="margin-top: 15px;">
             <div id="suggestion_list">
@@ -46,16 +53,10 @@ $(document).ready(function() {
                     keyword: input.val()
                 },
                 beforeSend: function() {
-                    // Solo inyectar la animación de carga sin destruir el color base del Dark Mode
-                    $("#search_textBox").css({
-                        "background-image": "url('LoaderIcon.gif')",
-                        "background-repeat": "no-repeat",
-                        "background-position": "calc(100% - 15px) center"
-                    });
+                    $("#ios_loader").fadeIn(200);
                 },
                 success: function(data) {
-                    // Limpiar el loader sin alterar el color
-                    $("#search_textBox").css("background-image", "none");
+                    $("#ios_loader").fadeOut(200);
                     if ($.trim(data)) {   
                         $("#suggestion_list").html(data);
                         var emails = document.querySelectorAll('.email');
@@ -70,20 +71,15 @@ $(document).ready(function() {
                         
                         emails.forEach(function(email) {
                             email.addEventListener('click', function(event) {
-                                console.log("Clic simple");
-                                
-                                // Remove existing line break if any
                                 if (lineBreak && lineBreak.parentNode) {
                                     lineBreak.parentNode.removeChild(lineBreak);
                                     lineBreak = null;
                                 }
                                 
-                                // Reset all: collapse
                                 emails.forEach(function(e) {
                                     e.classList.remove('expand');
                                 });
                                 
-                                // Check if this is the last email in its row
                                 var nextSibling = email.nextElementSibling;
                                 var isLastInRow = false;
                                 if (nextSibling && nextSibling.classList.contains('email')) {
@@ -93,11 +89,17 @@ $(document).ready(function() {
                                 }
                                 
                                 email.classList.add('expand');
-                                
-                                // Ocultar el logo de punisher temporalmente para dar espacio al Modal
                                 $(".avatar").slideUp(250);
                                 
-                                // If last in row, insert a line break before the next sibling
+                                // Auto-scroll inteligente para asegurar visibilidad total de la card
+                                setTimeout(function() {
+                                    email.scrollIntoView({ 
+                                        behavior: 'smooth', 
+                                        block: 'nearest',
+                                        inline: 'start'
+                                    });
+                                }, 150);
+                                
                                 if (isLastInRow && nextSibling) {
                                     lineBreak = document.createElement('div');
                                     lineBreak.style.width = '100%';
@@ -117,12 +119,17 @@ $(document).ready(function() {
                                     email.classList.remove('expand');
                                 }
                             });
-                            // Remove line break
                             if (lineBreak && lineBreak.parentNode) {
                                 lineBreak.parentNode.removeChild(lineBreak);
                                 lineBreak = null;
                             }
-                            selectPlate(1);
+
+                            // Si el clic es en la navegación, ignorar reseteo para evitar parpadeo
+                            if (event.target.closest('.mobile-bottom-nav') || event.target.closest('.sidebar-toggle') || event.target.closest('.header-btn')) {
+                                return;
+                            }
+
+                            selectPlate(1, false); // No forzar foco al limpiar por clic externo
                         });
                 
                         var xTouches = document.querySelectorAll('.x-touch');
@@ -130,12 +137,10 @@ $(document).ready(function() {
                             xTouch.addEventListener('click', function(event) {
                                 var email = this.closest('.email');
                                 email.classList.remove('expand');
-                                // Remove line break
                                 if (lineBreak && lineBreak.parentNode) {
                                     lineBreak.parentNode.removeChild(lineBreak);
                                     lineBreak = null;
                                 }
-                                // Restaurar el logo solo si hay 2 o menos elementos en la lista
                                 if (emails.length <= 2) {
                                     $(".avatar").slideDown(250);
                                 }
@@ -150,17 +155,20 @@ $(document).ready(function() {
             var newValue = input.val().substr(3);
             input.val(newValue);
             $("#suggestion_list").hide();
-            $(".avatar").slideDown(250); // Restaurar logo
+            $(".avatar").slideDown(250); 
         } else {
             $("#suggestion_list").hide();
-            $(".avatar").slideDown(250); // Restaurar logo al vaciar
+            $(".avatar").slideDown(250); 
         }
     });
+
 });
 
-function selectPlate(val) {
+function selectPlate(val, shouldFocus = true) {
     $("#search_textBox").val("");
-    $("#search_textBox").focus()
+    if (shouldFocus) {
+        $("#search_textBox").focus();
+    }
     $("#suggestion_list").hide();
     $(".avatar").slideDown(250); // Restaurar logo globalmente
 }
