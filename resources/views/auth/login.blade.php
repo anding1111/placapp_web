@@ -498,6 +498,9 @@
                 }
             );
             
+            // Ocultar el formulario de login para dejar espacio al QR
+            document.getElementById('displayed').style.display = 'none';
+            
             // Mostrar el modal
             modal.style.display = 'flex';
         }
