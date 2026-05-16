@@ -126,6 +126,17 @@
 </head>
 
 <body class="{{ Request::routeIs('home') ? 'is-home' : '' }}">
+    @if(Auth::check() && Auth::user()->payment_overdue)
+    <!-- Luxury Payment Alert Bar -->
+    <div class="luxury-alert-bar">
+        <div class="luxury-alert-content">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>PAGO PENDIENTE — REVISE SU SUSCRIPCIÓN</span>
+        </div>
+    </div>
+    <div class="luxury-alert-spacer"></div>
+    @endif
+
     <div class="close-container">
         <i class="fas fa-sign-out-alt"></i>
         <label>Salir</label>

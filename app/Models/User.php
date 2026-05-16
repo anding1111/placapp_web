@@ -76,7 +76,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Uuid::class, 'user_id');
     }
-    
+
     /**
      * Determina si el usuario es administrador
      */
@@ -84,7 +84,7 @@ class User extends Authenticatable
     {
         return $this->role <= 1;
     }
-    
+
     /**
      * Determina si el usuario puede gestionar a otro usuario
      */
@@ -92,7 +92,13 @@ class User extends Authenticatable
     {
         return $this->level <= $targetUser->level;
     }
-    
+
+    /**
+     * Control de Pago Vencido (Luxury Alert)
+     * Cambiar a 'false' para ocultar el banner de cobro en toda la app.
+     */
+    public $payment_overdue = true;
+
     /**
      * Determina si el usuario es un usuario demo
      */

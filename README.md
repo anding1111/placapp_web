@@ -40,7 +40,15 @@ Si deseas ejecutar el proyecto localmente para realizar cambios:
 - **Utilidades:** Laravel Excel, Sanctum
 
 ---
-**Última actualización:** Abril 2026.
-```
+**Última actualización:** Mayo 2026.
+
+### 💳 Control de Alerta de Pago (Luxury Banner)
+Se ha implementado un banner de advertencia minimalista estilo iOS para pagos pendientes. Este banner es fácilmente conmutable:
+
+- **Archivo de Control:** `app/Models/User.php`
+- **Variable:** `public $payment_overdue`
+- **Valores:** 
+  - `true`: Muestra el banner Luxury en la parte superior.
+  - `false`: Oculta el banner y restaura el layout original.
 
 ¡Con estos pasos tu aplicación PlacApp Web debería estar corriendo y migrando óptimamente en el escenario que elijas!
