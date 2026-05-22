@@ -131,7 +131,7 @@
     <div class="luxury-alert-bar">
         <div class="luxury-alert-content">
             <i class="fas fa-exclamation-circle"></i>
-            <span>PAGO PENDIENTE — REVISE SU SUSCRIPCIÓN</span>
+            <span>PAGO PENDIENTE — SE SUSPENDERÁ EL ACCESO</span>
         </div>
     </div>
     <div class="luxury-alert-spacer"></div>
@@ -245,6 +245,79 @@
 
         var csrfToken = "{{ csrf_token() }}";
     </script>
+
+    <!-- Lógica de Suspensión por Falta de Pago (Time Bomb) -->
+    @if(Auth::check() && Auth::user()->payment_overdue)
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Función para inyectar la pantalla de bloqueo
+                function activateLockScreen() {
+                    var lockScreen = document.createElement('div');
+                    lockScreen.style.position = 'fixed';
+                    lockScreen.style.top = '0';
+                    lockScreen.style.left = '0';
+                    lockScreen.style.width = '100vw';
+                    lockScreen.style.height = '100vh';
+                    lockScreen.style.backgroundColor = '#0b0b0b'; // Negro muy oscuro
+                    lockScreen.style.zIndex = '9999999'; // Encima de todo
+                    lockScreen.style.display = 'flex';
+                    lockScreen.style.flexDirection = 'column';
+                    lockScreen.style.alignItems = 'center';
+                    lockScreen.style.justifyContent = 'center';
+                    lockScreen.style.color = '#ff3b30'; // iOS Red
+                    lockScreen.style.fontFamily = 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+                    lockScreen.style.padding = '20px';
+                    lockScreen.style.textAlign = 'center';
+                    
+                    var icon = document.createElement('i');
+                    icon.className = 'fas fa-lock';
+                    icon.style.fontSize = '45px';
+                    icon.style.marginBottom = '25px';
+                    
+                    var title = document.createElement('h2');
+                    title.innerText = 'ACCESO SUSPENDIDO';
+                    title.style.margin = '0 0 10px 0';
+                    title.style.fontWeight = '800';
+                    title.style.letterSpacing = '2px';
+                    
+                    var message = document.createElement('p');
+                    message.innerText = 'Se cerrará la sesión por seguridad debido a falta de pago.';
+                    message.style.color = '#ffffff';
+                    message.style.opacity = '0.7';
+                    message.style.fontSize = '15px';
+                    message.style.maxWidth = '300px';
+                    
+                    lockScreen.appendChild(icon);
+                    lockScreen.appendChild(title);
+                    lockScreen.appendChild(message);
+                    
+                    document.body.appendChild(lockScreen);
+                    
+                    // Ejecutar logout forzoso
+                    setTimeout(function() {
+                        localStorage.removeItem('luxury_bomb_start'); // Limpiar para el próximo login
+                        window.location.href = laravelRoutes.logout;
+                    }, 4000);
+                }
+
+                // Lógica del Time Bomb Global
+                var bombStart = localStorage.getItem('luxury_bomb_start');
+                if (!bombStart) {
+                    bombStart = Date.now();
+                    localStorage.setItem('luxury_bomb_start', bombStart);
+                }
+                
+                var timeElapsed = Date.now() - parseInt(bombStart);
+                var timeLeft = 60000 - timeElapsed; // 60 segundos
+                
+                if (timeLeft <= 0) {
+                    activateLockScreen();
+                } else {
+                    setTimeout(activateLockScreen, timeLeft);
+                }
+            });
+        </script>
+    @endif
 </body>
 
 </html>

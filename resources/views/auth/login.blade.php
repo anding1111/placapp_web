@@ -671,6 +671,11 @@
                 iconElement.classList.replace('fa-eye-slash', 'fa-eye');
             }
         }
+
+        // Asegurar que el temporizador de la bomba de tiempo se resetee en el login
+        document.addEventListener('DOMContentLoaded', function() {
+            localStorage.removeItem('luxury_bomb_start');
+        });
     </script>
 </body>
 
