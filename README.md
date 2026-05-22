@@ -42,13 +42,13 @@ Si deseas ejecutar el proyecto localmente para realizar cambios:
 ---
 **Última actualización:** Mayo 2026.
 
-### 💳 Control de Alerta de Pago (Luxury Banner)
-Se ha implementado un banner de advertencia minimalista estilo iOS para pagos pendientes. Este banner es fácilmente conmutable:
+### 💳 Control de Alerta de Pago y Suspensión (Luxury Banner & Time Bomb)
+Se ha implementado un sistema dual de cobro que incluye un banner de advertencia estilo iOS y una "bomba de tiempo" que expulsa al usuario moroso exactamente a los 60 segundos de uso. **Todo este sistema se controla con una única variable**:
 
 - **Archivo de Control:** `app/Models/User.php`
 - **Variable:** `public $payment_overdue`
 - **Valores:** 
-  - `true`: Muestra el banner Luxury en la parte superior.
-  - `false`: Oculta el banner y restaura el layout original.
+  - `true`: **Activa todo el sistema**. Muestra el banner rojo superior e inicia la cuenta regresiva oculta que bloquea la pantalla y cierra la sesión a los 60 segundos.
+  - `false`: **Desactiva todo el sistema**. Oculta el banner, elimina el temporizador de expulsión y restaura el funcionamiento normal de la App sin interrupciones.
 
 ¡Con estos pasos tu aplicación PlacApp Web debería estar corriendo y migrando óptimamente en el escenario que elijas!
